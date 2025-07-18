@@ -9,7 +9,7 @@ export const ToastProvider = ({ children }) => {
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
-    setTimeout(() => setToast(null), 1000);
+    setTimeout(() => setToast(null), 1000);  
   };
 
   return (

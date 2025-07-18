@@ -31,72 +31,63 @@ const ProfilePage = () => {
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-2xl mx-auto">
             <div className="card p-8">
-              {/* Profile Header */}
               <div className="text-center mb-8">
+                
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Profile</h1>
                 <p className="text-gray-600 dark:text-gray-300">Manage your account information</p>
+              
               </div>
 
-              {/* Profile Form */}
+            
               <div className="space-y-6">
                 <div>
+                  
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <User className="w-4 h-4 inline mr-2" />
                     Full Name
                   </label>
-                  <input
-                    type="text"
-                    value={name}
+                  
+                  <input type="text" value={name}
                     onChange={(e) => setName(e.target.value)}
                     disabled={!isEditing}
-                    className="input-field disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-                  />
+                    className="input-field disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"/>
                 </div>
 
                 <div>
+                  
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <Mail className="w-4 h-4 inline mr-2" />
                     Email Address
                   </label>
-                  <input
-                    type="email"
-                    value={email}
+                  <input type="email" value={email} 
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={!isEditing}
-                    className="input-field disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
-                  />
+                    className="input-field disabled:bg-gray-50 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"/>
+                
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-4 pt-1">
+                  
                   {isEditing ? (
                     <>
-                      <button
-                        onClick={handleSave}
-                        className="btn-primary flex items-center gap-2"
-                      >
+                      <button onClick={handleSave} className="btn-primary flex items-center gap-2">
                         <Save className="w-4 h-4" />
                         Save Changes
                       </button>
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        className="btn-secondary"
-                      >
+                      <button onClick={() => setIsEditing(false)} className="btn-secondary">
                         Cancel
                       </button>
                     </>
                   ) : (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="btn-primary"
-                    >
+                    <button onClick={() => setIsEditing(true)} className="btn-primary">
                       Edit Profile
                     </button>
                   )}
+                
                 </div>
               </div>
 
-              {/* Account Stats */}
+              
               <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Account Statistics</h3>
                 <div className="grid grid-cols-2 gap-4">
