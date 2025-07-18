@@ -106,6 +106,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
               to={`/document/${doc.id}`}
               className={`sidebar-item ${location.pathname === `/document/${doc.id}` ? 'active' : ''}`}
               title={doc.title}
+              onClick={() => localStorage.setItem('lastOpenedDocumentId', doc.id)}
             >
               <FileText className="w-4 h-4 flex-shrink-0" />
               {isOpen && <span className="truncate">{doc.title}</span>}
@@ -154,6 +155,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                     to={`/document/${doc.id}`}
                     className={`sidebar-item ${location.pathname === `/document/${doc.id}` ? 'active' : ''} ${isOpen ? 'ml-6' : 'justify-center'}`}
                     title={doc.title}
+                    onClick={() => localStorage.setItem('lastOpenedDocumentId', doc.id)}
                   >
                     <FileText className="w-4 h-4 flex-shrink-0" />
                     {isOpen && <span className="truncate">{doc.title}</span>}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import Sidebar from '../components/Sidebar';
@@ -10,6 +10,18 @@ const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [recentDoc, setRecentDoc] = useState(null);
+
+  useEffect(() => {
+    // Get last opened document ID from localStorage
+    const lastDocId = localStorage.getItem('lastOpenedDocumentId');
+    if (lastDocId) {
+      const doc = documents.find(d => d.id === lastDocId);
+      setRecentDoc(doc || null);
+    } else {
+      setRecentDoc(null);
+    }
+  }, [documents]);
 
   const filteredDocuments = documents.filter(doc => {
     const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -60,9 +72,40 @@ const Dashboard = () => {
               </p>
             </div>
 
+            <div className="mb-8">
+              {recentDoc ? (
+                <div className="card p-6 flex flex-col gap-4">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    Continue where you left off
+                  </h2>
+                  <h3 className="font-medium text-slate-dark dark:text-white text-lg">
+                    {recentDoc.title}
+                  </h3>
+                  <div className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
+                    {/* Show a preview of the document content if available */}
+                    {recentDoc.content?.content?.[0]?.content?.[0]?.text || 'No preview available.'}
+                  </div>
+                  <Link
+                    to={`/document/${recentDoc.id}`}
+                    className="btn-primary w-fit mt-2"
+                  >
+                    Continue Editing
+                  </Link>
+                </div>
+              ) : (
+                <div className="card p-8 text-center">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">No recent document</h3>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">Open a document from the sidebar or create a new one to get started.</p>
+                  <button onClick={handleCreateDocument} className="btn-primary">
+                    Create Document
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div className="grid lg:grid-cols-3 gap-6">
               {/* Recent Documents */}
-              <div className="lg:col-span-2">
+              {/* <div className="lg:col-span-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                   <Clock className="w-5 h-5" />
                   Recent Documents
@@ -101,10 +144,10 @@ const Dashboard = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
 
               {/* All Documents */}
-              <div>
+              {/* <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
                   All Documents
                 </h2>
@@ -124,7 +167,7 @@ const Dashboard = () => {
                     </Link>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </main>
