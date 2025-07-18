@@ -171,7 +171,7 @@ const SignupPage = () => {
                 to="/login"
                 className="text-slate font-medium hover:text-slate-dark transition-colors"
               >
-                LOGIN
+                Login
               </Link>
             </div>
           </div>

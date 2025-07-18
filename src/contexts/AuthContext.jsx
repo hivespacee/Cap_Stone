@@ -5,7 +5,9 @@ import {
   signOut,
   sendPasswordResetEmail,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  signInWithPopup,
+  GoogleAuthProvider
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
@@ -83,6 +85,16 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      return result.user;
+    } catch (error) {
+      throw new Error(getErrorMessage(error.code));
+    }
+  };
+
   const getErrorMessage = (errorCode) => {
     switch (errorCode) {
       case 'auth/user-not-found':
@@ -109,6 +121,7 @@ export const AuthProvider = ({ children }) => {
     signup,
     logout,
     resetPassword,
+    loginWithGoogle,
   };
 
   return (

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { Edit3, Leaf, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Edit3, Leaf, Mail, Lock, Eye, EyeOff, ArrowRight, LogIn } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -32,30 +32,42 @@ const LoginPage = () => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      await loginWithGoogle();
+      showToast('Login successful!', 'success');
+      navigate('/dashboard');
+    } catch (err) {
+      showToast('Google login failed.', 'error');
+      setError('Google login failed.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-cream-light to-slate dark:from-charcoal-light dark:to-charcoal">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-slate rounded-lg flex items-center justify-center">
-              <Edit3 className="w-5 h-5 text-white" />
+      <div className="w-full max-w-4xl flex shadow-lg rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+        {/* Left Side - Illustration or Info */}
+        <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-slate-light dark:bg-charcoal-light p-8">
+          <div className="mb-8">
+            <div className="w-16 h-16 bg-slate rounded-lg flex items-center justify-center mx-auto mb-4">
+              <Edit3 className="w-8 h-8 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">Chotaa Notion</span>
-          </Link>
+            <h2 className="text-3xl pl-13 font-bold text-slate-dark dark:text-white mb-2">Welcome Back!</h2>
+            <p className="pl-10 text-gray-700 dark:text-gray-300">Sign in to continue</p>
+          </div>
         </div>
-
-        {/* Login Card */}
-        <div className="card p-8 relative overflow-hidden">
-          {/* Decorative leaf */}
+        {/* Right Side - Login Form */}
+        <div className="w-full md:w-1/2 p-8 relative">
           <div className="absolute top-4 right-4 opacity-20">
             <Leaf className="w-16 h-16 text-slate transform rotate-12" />
           </div>
-          
           <div className="relative z-10">
             <h1 className="text-2xl font-bold text-slate mb-2">LOGIN</h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">Sign in to your account to continue</p>
-
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -115,7 +127,17 @@ const LoginPage = () => {
                 {loading ? 'Signing in...' : 'LOGIN'}
               </button>
             </form>
-
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={loading}
+                className="w-full flex items-center justify-center gap-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg py-3 font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <LogIn className="w-5 h-5" />
+                Continue with Google
+              </button>
+            </div>
             <div className="mt-6 text-center">
               <span className="text-gray-600 dark:text-gray-400">Do you have an account? </span>
               <Link 

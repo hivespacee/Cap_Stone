@@ -29,8 +29,7 @@ const Dashboard = () => {
     return matchesSearch && matchesFolder;
   });
 
-  const recentDocuments = documents
-    .sort((a, b) => {
+  const recentDocuments = documents.sort((a, b) => {
         const dateA = a.updatedAt ? new Date(a.updatedAt) : new Date(0);
         const dateB = b.updatedAt ? new Date(b.updatedAt) : new Date(0);
         return dateB - dateA;
@@ -39,6 +38,10 @@ const Dashboard = () => {
 
   const handleCreateDocument = () => {
     createDocument('Untitled Document', selectedFolder);
+  };
+
+  const handleFullScreen = () => {
+    setIsSidebarOpen(false);
   };
 
   const formatDate = (dateString) => {
@@ -58,13 +61,24 @@ const Dashboard = () => {
 
   return (
     <div className="flex h-screen bg-cream-light dark:bg-slate-dark *:border-none">
-      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} onFullScreen={handleFullScreen} />
       
       <div className="flex-1 flex flex-col overflow-hidden ">
         <Header />
         
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-6xl mx-auto">
+            <div className="flex justify-end mb-4">
+              <button
+                onClick={handleFullScreen}
+                className="btn-secondary flex items-center gap-2"
+                title="Full Screen"
+              >
+                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="M4 4h6M4 4v6M20 20h-6M20 20v-6M20 4v6M20 4h-6M4 20v-6M4 20h6"/>
+                </svg>
+              </button>
+            </div>
 
             <div className="mb-8">
               <p className="text-gray-600 dark:text-gray-300">
