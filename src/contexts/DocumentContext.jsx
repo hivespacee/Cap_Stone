@@ -57,7 +57,7 @@ export const DocumentProvider = ({ children }) => {
       setLoading(false);
     });
 
-    // Set up real-time listeners for folders
+    // Set up real-time listeners for folders 
     const foldersQuery = query(
       collection(db, 'folders'),
       where('userId', '==', user.id),
@@ -101,7 +101,8 @@ export const DocumentProvider = ({ children }) => {
 
       const docRef = await addDoc(collection(db, 'documents'), newDoc);
       return { id: docRef.id, ...newDoc };
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error creating document:', error);
       throw new Error('Failed to create document');
     }
@@ -116,7 +117,8 @@ export const DocumentProvider = ({ children }) => {
         ...updates,
         updatedAt: new Date().toISOString()
       });
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error updating document:', error);
       throw new Error('Failed to update document');
     }
@@ -127,7 +129,8 @@ export const DocumentProvider = ({ children }) => {
 
     try {
       await deleteDoc(doc(db, 'documents', id));
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error deleting document:', error);
       throw new Error('Failed to delete document');
     }
