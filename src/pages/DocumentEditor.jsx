@@ -70,8 +70,8 @@ const DocumentEditor = () => {
   }
 
   return (
-    <div className="flex h-screen bg-cream dark:bg-charcoal">
-      <Sidebar />
+    <div className=" flex h-screen bg-cream dark:bg-charcoal">
+      {/* <Sidebar /> */}
       
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />

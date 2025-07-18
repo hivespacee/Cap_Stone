@@ -57,12 +57,14 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
       <DocumentList isOpen={isOpen} />
 
       {/* Settings */}
+      {/* 
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <button className="sidebar-item w-full" title="Settings">
           <Settings className="w-5 h-5 flex-shrink-0" />
           {isOpen && <span className="truncate">Settings</span>}
         </button>
       </div>
+      */}
     </div>
   );
 };

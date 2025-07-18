@@ -11,6 +11,8 @@ const Dashboard = () => {
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [recentDoc, setRecentDoc] = useState(null);
+  const [showNewDocModal, setShowNewDocModal] = useState(false);
+  const [newDocName, setNewDocName] = useState('');
 
   useEffect(() => {
     // Get last opened document ID from localStorage
@@ -37,7 +39,15 @@ const Dashboard = () => {
     .slice(0, 5);
 
   const handleCreateDocument = () => {
-    createDocument('Untitled Document', selectedFolder);
+    setShowNewDocModal(true);
+  };
+
+  const handleConfirmCreateDocument = async () => {
+    if (newDocName.trim()) {
+      await createDocument(newDocName.trim(), selectedFolder);
+      setNewDocName('');
+      setShowNewDocModal(false);
+    }
   };
 
   const handleFullScreen = () => {
@@ -62,10 +72,8 @@ const Dashboard = () => {
   return (
     <div className="flex h-screen bg-cream-light dark:bg-slate-dark *:border-none">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} onFullScreen={handleFullScreen} />
-      
       <div className="flex-1 flex flex-col overflow-hidden ">
         <Header />
-        
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-end mb-4">
@@ -79,13 +87,11 @@ const Dashboard = () => {
                 </svg>
               </button>
             </div>
-
             <div className="mb-8">
               <p className="text-gray-600 dark:text-gray-300">
                 Ready to create something amazing today?
               </p>
             </div>
-
             <div className="mb-8">
               {recentDoc ? (
                 <div className="card p-6 flex flex-col gap-4">
@@ -116,7 +122,6 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
-
             <div className="grid lg:grid-cols-3 gap-6">
               {/* Recent Documents */}
               {/* <div className="lg:col-span-2">
@@ -186,6 +191,27 @@ const Dashboard = () => {
           </div>
         </main>
       </div>
+      {/* --- Modal for new document name --- */}
+      {showNewDocModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-96 max-w-full mx-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Name your new document</h3>
+            <input
+              type="text"
+              value={newDocName}
+              onChange={(e) => setNewDocName(e.target.value)}
+              placeholder="Document name"
+              className="input-field mb-4"
+              autoFocus
+              onKeyPress={(e) => e.key === 'Enter' && handleConfirmCreateDocument()}
+            />
+            <div className="flex gap-3 justify-end">
+              <button onClick={() => setShowNewDocModal(false)} className="btn-secondary">Cancel</button>
+              <button onClick={handleConfirmCreateDocument} className="btn-primary" disabled={!newDocName.trim()}>Create</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -77,7 +77,7 @@ const DocumentList = ({ isOpen }) => {
         <div className="pt-4">
           <div className="flex items-center justify-between mb-2">
             {isOpen && (
-              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+              <span className="text-s font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Documents
               </span>
             )}
@@ -87,14 +87,14 @@ const DocumentList = ({ isOpen }) => {
                 className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 title="New Document"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setShowNewFolderModal(true)}
                 className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                 title="New Folder"
               >
-                <FolderPlus className="w-4 h-4" />
+                <FolderPlus className="w-4 h-5" />
               </button>
             </div>
           </div>
@@ -116,7 +116,7 @@ const DocumentList = ({ isOpen }) => {
                   className="p-1 text-red-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
                   title="Delete Document"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-5" />
                 </button>
               )}
             </div>
@@ -151,7 +151,7 @@ const DocumentList = ({ isOpen }) => {
                       className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors opacity-0 group-hover:opacity-100"
                       title="Add Document"
                     >
-                      <Plus className="w-3 h-3" />
+                      <Plus className="w-4 h-4" />
                     </button>
                   )}
                 </div>
