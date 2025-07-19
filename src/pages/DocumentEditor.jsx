@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import { Save, ArrowLeft, Edit3 } from 'lucide-react';
+
+import { useCreateBlockNote } from "@blocknote/react";
+import { BlockNoteView } from "@blocknote/mantine";
+import "@blocknote/mantine/style.css";
 
 const DocumentEditor = () => {
   const { id } = useParams();
@@ -11,49 +15,45 @@ const DocumentEditor = () => {
   const { documents, updateDocument } = useDocuments();
   const [document, setDocument] = useState(null);
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
 
+  // Pass only initial content
+  const [initialContent, setInitialContent] = useState(null);
+
   useEffect(() => {
-    const doc = documents.find(d => d.id === id);
+    const doc = documents.find((d) => d.id === id);
     if (doc) {
       setDocument(doc);
       setTitle(doc.title);
-      setContent(doc.content?.content?.[0]?.content?.[0]?.text || '');
+      setInitialContent(doc.content || null);
     } else {
       navigate('/dashboard');
     }
+    // eslint-disable-next-line
   }, [id, documents, navigate]);
 
-  const handleSave = () => {
-    if (document) {
-      updateDocument(document.id, {
-        title,
-        content: {
-          type: 'doc',
-          content: [
-            {
-              type: 'paragraph',
-              content: [{ type: 'text', text: content }]
-            }
-          ]
-        }
-      });
-      setLastSaved(new Date());
-      setIsEditing(false);
-    }
-  };
+  // Do NOT pass `editable` or other deprecated options
+  const editor = useCreateBlockNote({
+    initialContent,
+  });
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
     setIsEditing(true);
   };
 
-  const handleContentChange = (e) => {
-    setContent(e.target.value);
-    setIsEditing(true);
-  };
+  const handleSave = useCallback(async () => {
+    if (document) {
+      const blockNoteContent = await editor.topLevelBlocksToCjson();
+      updateDocument(document.id, {
+        title,
+        content: blockNoteContent,
+      });
+      setLastSaved(new Date());
+      setIsEditing(false);
+    }
+  }, [editor, document, title, updateDocument]);
 
   if (!document) {
     return (
@@ -62,7 +62,9 @@ const DocumentEditor = () => {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <Edit3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Document not found</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Document not found
+            </h2>
           </div>
         </div>
       </div>
@@ -70,12 +72,10 @@ const DocumentEditor = () => {
   }
 
   return (
-    <div className=" flex h-screen bg-cream dark:bg-charcoal">
-      {/* <Sidebar /> */}
-      
+    <div className="flex h-screen bg-cream dark:bg-charcoal">
       <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        
+
         <div className="flex-1 flex flex-col">
           {/* Editor Header */}
           <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-6 py-4">
@@ -117,13 +117,14 @@ const DocumentEditor = () => {
           {/* Editor Content */}
           <div className="flex-1 overflow-auto bg-white dark:bg-gray-800">
             <div className="max-w-4xl mx-auto p-8">
-              <textarea
-                value={content}
-                onChange={handleContentChange}
-                placeholder="Start writing..."
-                className="w-full min-h-96 bg-transparent border-none outline-none resize-none text-gray-900 dark:text-white text-lg leading-relaxed placeholder-gray-500"
-                style={{ minHeight: 'calc(100vh - 200px)' }}
-              />
+              {editor && (
+                <BlockNoteView
+                  editor={editor}
+                  theme="light"
+                  editable={true} // <- Set editable HERE, not in the hook
+                  onChange={() => setIsEditing(true)}
+                />
+              )}
             </div>
           </div>
         </div>
