@@ -1,18 +1,23 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
+import ShareDocumentModal from './ShareDocumentModal';
 import {
   FileText,
   FolderPlus,
   Plus,
   ChevronRight,
   ChevronDown,
-  Trash2
+  Trash2,
+  Share2,
+  Crown,
+  Edit3,
+  Eye
 } from 'lucide-react';
 
 const DocumentList = ({ isOpen }) => {
   const location = useLocation();
-  const { documents, folders, createDocument, createFolder, deleteDocument } = useDocuments();
+  const { documents, folders, createDocument, createFolder, deleteDocument, getUserRole } = useDocuments();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -20,6 +25,7 @@ const DocumentList = ({ isOpen }) => {
   const [newDocName, setNewDocName] = useState('');
   const [newDocFolderId, setNewDocFolderId] = useState(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [shareModalDoc, setShareModalDoc] = useState(null);
 
   const toggleFolder = (folderId) => {
     const newExpanded = new Set(expandedFolders);
@@ -68,7 +74,31 @@ const DocumentList = ({ isOpen }) => {
     setConfirmDeleteId(null);
   };
 
+  const handleShareDocument = (doc, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setShareModalDoc(doc);
+  };
+
+  const getRoleIcon = (document) => {
+    const role = getUserRole(document);
+    switch (role) {
+      case 'admin':
+        return <Crown className="w-3 h-3 text-yellow-500" title="Owner" />;
+      case 'editor':
+        return <Edit3 className="w-3 h-3 text-blue-500" title="Editor" />;
+      case 'viewer':
+        return <Eye className="w-3 h-3 text-gray-500" title="Viewer" />;
+      default:
+        return null;
+    }
+  };
+
   const documentsWithoutFolder = documents.filter(doc => !doc.folderId);
+
+  // Debug logs
+  // console.log("documents:", documents);
+  // console.log("folders:", folders);
 
   return (
     <>
@@ -109,15 +139,29 @@ const DocumentList = ({ isOpen }) => {
               >
                 <FileText className="w-4 h-4 flex-shrink-0" />
                 {isOpen && <span className="truncate">{doc.title}</span>}
+                {isOpen && getRoleIcon(doc)}
               </Link>
               {isOpen && (
-                <button
-                  onClick={() => handleDeleteDocument(doc.id)}
-                  className="p-1 text-red-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
-                  title="Delete Document"
-                >
-                  <Trash2 className="w-4 h-5" />
-                </button>
+                <div className="flex items-center opacity-0 group-hover:opacity-100">
+                  {getUserRole(doc) === 'admin' && (
+                    <button
+                      onClick={(e) => handleShareDocument(doc, e)}
+                      className="p-1 text-blue-400 hover:text-blue-600 transition-colors"
+                      title="Share Document"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+                  )}
+                  {getUserRole(doc) === 'admin' && (
+                    <button
+                      onClick={() => handleDeleteDocument(doc.id)}
+                      className="p-1 text-red-400 hover:text-red-600 transition-colors"
+                      title="Delete Document"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           ))}
@@ -166,15 +210,29 @@ const DocumentList = ({ isOpen }) => {
                     >
                       <FileText className="w-4 h-4 flex-shrink-0" />
                       {isOpen && <span className="truncate">{doc.title}</span>}
+                      {isOpen && getRoleIcon(doc)}
                     </Link>
                     {isOpen && (
-                      <button
-                        onClick={() => handleDeleteDocument(doc.id)}
-                        className="p-1 text-red-400 hover:text-red-600 transition-colors opacity-0 group-hover:opacity-100"
-                        title="Delete Document"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center opacity-0 group-hover:opacity-100">
+                        {getUserRole(doc) === 'admin' && (
+                          <button
+                            onClick={(e) => handleShareDocument(doc, e)}
+                            className="p-1 text-blue-400 hover:text-blue-600 transition-colors"
+                            title="Share Document"
+                          >
+                            <Share2 className="w-4 h-4" />
+                          </button>
+                        )}
+                        {getUserRole(doc) === 'admin' && (
+                          <button
+                            onClick={() => handleDeleteDocument(doc.id)}
+                            className="p-1 text-red-400 hover:text-red-600 transition-colors"
+                            title="Delete Document"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     )}
                   </div>
                 ))}
@@ -241,6 +299,12 @@ const DocumentList = ({ isOpen }) => {
           </div>
         </div>
       )}
+
+      <ShareDocumentModal
+        isOpen={!!shareModalDoc}
+        onClose={() => setShareModalDoc(null)}
+        document={shareModalDoc}
+      />
     </>
   );
 };

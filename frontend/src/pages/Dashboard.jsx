@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { FileText, Search, Clock } from 'lucide-react';
+import { FileText, Search, Clock, Users } from 'lucide-react';
 
 const Dashboard = () => {
-  const { documents, folders, createDocument } = useDocuments();
+  const { documents, folders, createDocument, activeUsers } = useDocuments();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -101,6 +101,12 @@ const Dashboard = () => {
                   <h3 className="font-medium text-slate-dark dark:text-white text-lg">
                     {recentDoc.title}
                   </h3>
+                  {activeUsers[recentDoc.id] && activeUsers[recentDoc.id].length > 0 && (
+                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                      <Users className="w-4 h-4" />
+                      <span>{activeUsers[recentDoc.id].length} user(s) active</span>
+                    </div>
+                  )}
                   <div className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
                     {/* Show a preview of the document content if available */}
                     {recentDoc.content?.content?.[0]?.content?.[0]?.text || 'No preview available.'}
