@@ -20,9 +20,11 @@ const CommentsPanel = ({ document, onClose }) => {
     if (!newComment.trim()) return;
 
     try {
-      await addComment(document.id, newComment.trim());
+      const commentData = await addComment(document.id, newComment.trim());
+      setComments((prev) => [...prev, commentData]); // Append the new comment to the list
       setNewComment('');
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Failed to add comment:', error);
     }
   };

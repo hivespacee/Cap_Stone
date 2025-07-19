@@ -96,9 +96,6 @@ const DocumentList = ({ isOpen }) => {
 
   const documentsWithoutFolder = documents.filter(doc => !doc.folderId);
 
-  // Debug logs
-  // console.log("documents:", documents);
-  // console.log("folders:", folders);
 
   return (
     <>

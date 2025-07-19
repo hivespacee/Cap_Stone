@@ -1,5 +1,6 @@
+// AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
-import { 
+import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
@@ -9,7 +10,8 @@ import {
   signInWithPopup,
   GoogleAuthProvider
 } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { auth, db } from '../config/firebase'; // Ensure 'db' is imported here!
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 
 const AuthContext = createContext();
 
@@ -25,14 +27,44 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Helper function to create or update a user's profile in Firestore
+  const createUserProfile = async (userAuth, additionalData = {}) => {
+    if (!userAuth) return;
+
+    const userRef = doc(db, 'users', userAuth.uid); // Document ID is the user's UID
+    const { displayName, email, photoURL, uid } = userAuth;
+
+    const userProfileData = {
+      uid: uid,
+      email: email,
+      // Prioritize displayName, then derive from email, fallback to 'Unknown User'
+      name: displayName || email?.split('@')[0] || 'Unknown User',
+      // Generate avatar URL if photoURL is not available
+      avatar: photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName || email?.split('@')[0] || 'Unknown User')}&background=4E6766&color=fff`,
+      createdAt: new Date().toISOString(), // Use client timestamp for profile creation
+      ...additionalData // Merge any additional data passed (e.g., name from signup form)
+    };
+
+    try {
+      await setDoc(userRef, userProfileData, { merge: true }); // Use merge: true to avoid overwriting existing data
+      console.log("User profile updated/created in Firestore:", userProfileData);
+    } catch (error) {
+      console.error("Error creating/updating user profile in Firestore:", error);
+    }
+  };
+
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (userAuth) => {
+      if (userAuth) {
+        // When auth state changes and a user is logged in, ensure their profile is in Firestore
+        await createUserProfile(userAuth);
+
         setUser({
-          id: user.uid,
-          email: user.email,
-          name: user.displayName || user.email.split('@')[0],
-          avatar: user.photoURL || `https://ui-avatars.com/api/?name=${user.displayName}&background=4E6766&color=fff`,
+          id: userAuth.uid,
+          email: userAuth.email,
+          name: userAuth.displayName || userAuth.email?.split('@')[0] || 'Unknown User',
+          avatar: userAuth.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userAuth.displayName || userAuth.email?.split('@')[0] || 'Unknown User')}&background=4E6766&color=fff`,
         });
       } else {
         setUser(null);
@@ -41,11 +73,13 @@ export const AuthProvider = ({ children }) => {
     });
 
     return unsubscribe;
-  }, []);
+  }, []); // Depend on nothing for a single run on mount/unmount
 
   const login = async (email, password) => {
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
+      // Ensure profile exists/updates on login
+      await createUserProfile(result.user);
       return result.user;
     }
     catch (error) {
@@ -59,8 +93,10 @@ export const AuthProvider = ({ children }) => {
       await updateProfile(result.user, {
         displayName: name,
       });
+      // Ensure profile is created/updated on signup, passing the provided name
+      await createUserProfile(result.user, { name });
       return result.user;
-    } 
+    }
     catch (error) {
       throw new Error(getErrorMessage(error.code));
     }
@@ -69,7 +105,7 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await signOut(auth);
-    } 
+    }
     catch (error) {
       throw new Error('Failed to logout');
     }
@@ -79,7 +115,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await sendPasswordResetEmail(auth, email);
       return true;
-    } 
+    }
     catch (error) {
       throw new Error(getErrorMessage(error.code));
     }
@@ -89,6 +125,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
+      // Ensure profile exists/updates on Google login
+      await createUserProfile(result.user);
       return result.user;
     } catch (error) {
       throw new Error(getErrorMessage(error.code));

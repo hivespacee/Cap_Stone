@@ -1,8 +1,9 @@
+// DocumentContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import {
   collection,
   doc,
-  getDocs,
+  getDocs, // Keep this for querying 'users'
   addDoc,
   updateDoc,
   deleteDoc,
@@ -15,7 +16,7 @@ import {
   arrayRemove,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from '../config/firebase'; // db is your Firestore instance
 import { useAuth } from './AuthContext';
 import { io } from 'socket.io-client';
 
@@ -68,7 +69,7 @@ export const DocumentProvider = ({ children }) => {
       setLoading(false);
     }, (error) => {
       console.error("Firestore onSnapshot error for documents:", error);
-      setLoading(false); 
+      setLoading(false);
     });
 
     // Set up real-time listener for folders
@@ -96,7 +97,7 @@ export const DocumentProvider = ({ children }) => {
         setSocket(null) // Disconnect socket on unmount or user change
       }
     };
-  }, [user]); 
+  }, [user]);
 
   // Initialize socket connection
   useEffect(() => {
@@ -136,7 +137,7 @@ export const DocumentProvider = ({ children }) => {
         }
       };
     }
-  }, [user]); 
+  }, [user]);
 
   // Function to create a new document
   const createDocument = async (title = 'Untitled', folderId = null) => {
@@ -148,7 +149,7 @@ export const DocumentProvider = ({ children }) => {
     try {
       const newDoc = {
         title,
-        content: [ 
+        content: [
           {
             type: 'paragraph',
             children: [{ text: 'Start writing...' }]
@@ -190,10 +191,10 @@ export const DocumentProvider = ({ children }) => {
       const docRef = doc(db, 'docs', id);
       await updateDoc(docRef, {
         ...updates,
-        updatedAt: serverTimestamp(), 
+        updatedAt: serverTimestamp(),
         lastEditedBy: user.id,
         lastEditedByName: user.name || user.email || 'Unknown User',
-        
+
       });
 
       // Emit real-time update via socket for collaborative editing
@@ -253,11 +254,11 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Function to share a document with another user by email
+  // Function to share a document with another user by email (UPDATED)
   const shareDocument = async (documentId, email, role) => {
     if (!user) {
       console.error('User not authenticated to share document.');
-      return;
+      return; // Or throw an error
     }
 
     try {
@@ -276,10 +277,22 @@ export const DocumentProvider = ({ children }) => {
         throw new Error('Only admins can share documents.');
       }
 
-      const targetUid = email; // Placeholder: Replace with actual UID lookup
+      
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        throw new Error(`User with email "${email}" not found. Please ensure they have registered.`);
+      }
+
+      const targetUserDoc = querySnapshot.docs[0];
+      const targetUid = targetUserDoc.id; 
+      const targetUserName = targetUserDoc.data().name || targetUserDoc.data().email?.split('@')[0] || 'Unknown User';
+      
 
       const newRoles = { ...docData.roles, [targetUid]: role };
-      const newMembers = Object.keys(newRoles); // Update members array based on new roles
+      const newMembers = Object.keys(newRoles);
 
       await updateDoc(docRef, {
         roles: newRoles,
@@ -288,7 +301,6 @@ export const DocumentProvider = ({ children }) => {
         lastEditedBy: user.id,
         lastEditedByName: user.name || user.email || 'Unknown User',
       });
-      console.log(`Document ${documentId} shared with ${email} as ${role}.`);
       return true;
     } catch (error) {
       console.error('Error sharing document:', error);
@@ -334,7 +346,7 @@ export const DocumentProvider = ({ children }) => {
         blockId, // Associate comment with a specific block in the editor
         userId: user.id,
         userName: user.name || user.email || 'Unknown User',
-        createdAt: serverTimestamp(),
+        createdAt: serverTimestamp(), // Changed back to serverTimestamp for consistency
         resolved: false
       };
 

@@ -121,11 +121,11 @@ const DocumentEditor = () => {
       setShareMessage(`Successfully shared with ${shareEmail} as ${shareRole}.`);
       setShareEmail('');
       setShareRole('viewer');
-      // Optionally close modal after success or keep open with success message
-      // setShowShareModal(false);
+      setTimeout(() => setShowShareModal(false), 500); // Close modal after short delay
     } catch (error) {
       console.error('Error sharing document:', error);
       setShareMessage(`Failed to share: ${error.message}`);
+      // Modal stays open for user to correct errors
     }
   };
 
