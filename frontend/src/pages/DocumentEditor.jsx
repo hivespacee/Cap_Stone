@@ -1,21 +1,56 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import CommentsPanel from '../components/CommentsPanel';
 import ActiveUsersIndicator from '../components/ActiveUsersIndicator';
-import { Save, ArrowLeft, Edit3, Users, MessageSquare, Share2 } from 'lucide-react'; // Added Share2 icon
+import { Save, ArrowLeft, Edit3, Users, MessageSquare, Share2 } from 'lucide-react';
 
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
+import { YDocProvider, useYDoc, useYjsProvider } from "@y-sweet/react";
 import "@blocknote/mantine/style.css";
+import '@blocknote/core/fonts/inter.css';
 
+// Utility function for generating user colors
+const generateUserColor = (userId) => {
+  const colors = [
+    '#3b82f6', '#ef4444', '#10b981', '#f59e0b', 
+    '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
+  ];
+  if (typeof userId !== 'string') return colors[0]; // fallback color
+  const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  return colors[hash % colors.length];
+};
+
+// Wrapper component for Y-Sweet provider
 const DocumentEditor = () => {
   const { id } = useParams();
+
+  return (
+    <YDocProvider
+      docId={id}
+      authEndpoint="https://demos.y-sweet.dev/api/auth"
+      showDebuggerLink={false}
+    >
+      <DocumentEditorContent />
+    </YDocProvider>
+  );
+};
+
+const DocumentEditorContent = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { isDark } = useTheme();
   const { documents, updateDocument, joinDocument, leaveDocument, activeUsers, getUserRole, shareDocument } = useDocuments();
+  
+  // Core State
   const [document, setDocument] = useState(null);
+  const [collaborativeUsers, setCollaborativeUsers] = useState([]);
   const [title, setTitle] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [lastSaved, setLastSaved] = useState(null);
@@ -28,6 +63,39 @@ const DocumentEditor = () => {
 
   // Pass only initial content
   const [initialContent, setInitialContent] = useState(null);
+
+  // Yjs providers
+  const provider = useYjsProvider();
+  const ydoc = useYDoc();
+
+  // Track active users using Y-Sweet's awareness
+  useEffect(() => {
+    if (!provider || !user) return;
+
+    const awareness = provider.awareness;
+    
+    // Set current user's awareness state
+    awareness.setLocalStateField('user', {
+      id: user.uid,
+      name: user.displayName || user.email?.split('@')[0] || `User ${user.uid.slice(-4)}`,
+      email: user.email,
+      avatarUrl: user.photoURL || '',
+      color: generateUserColor(user.uid)
+    });
+
+    // Listen for awareness changes
+    const handleAwarenessChange = () => {
+      const states = Array.from(awareness.getStates().values());
+      setCollaborativeUsers(states);
+    };
+
+    awareness.on('change', handleAwarenessChange);
+    handleAwarenessChange();
+
+    return () => {
+      awareness.off('change', handleAwarenessChange);
+    };
+  }, [provider, user]);
 
   useEffect(() => {
     const doc = documents.find((d) => d.id === id);
@@ -54,8 +122,21 @@ const DocumentEditor = () => {
     }
   }, [id, documents, navigate]);
 
+  // BlockNote editor with Y-Sweet collaboration
   const editor = useCreateBlockNote({
-    initialContent: initialContent || undefined, 
+    initialContent: initialContent || undefined,
+    collaboration: provider && user ? {
+      provider,
+      fragment: ydoc.getXmlFragment("blocknote"),
+      user: { 
+        color: generateUserColor(user.uid), 
+        name: user.displayName || user.email?.split('@')[0] || `User ${user.uid.slice(-4)}`
+      },
+      showCursorLabels: "activity",
+      onError: (error) => {
+        console.warn('Collaboration error:', error);
+      }
+    } : undefined,
   });
 
   // Effect to update editor content when document content changes from other sources (e.g., real-time updates)
@@ -66,14 +147,12 @@ const DocumentEditor = () => {
     }
   }, [editor, document, initialContent]);
 
-
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
     setIsEditing(true);
   };
 
   const handleSave = useCallback(async () => {
-    // --- FIX FOR EDITOR.GET IS NOT A FUNCTION ERROR ---
     // Ensure editor and document are initialized before attempting to save.
     if (!editor || !document) {
       console.warn("Editor or document not ready for saving.");
@@ -81,10 +160,7 @@ const DocumentEditor = () => {
     }
 
     try {
-      const blockNoteContent = editor.document; // BlockNote v0.1.0+ uses editor.document directly
-      // If you are using an older version of BlockNote, you might need `await editor.getBlocks()` or `await editor.getHTML()`
-      // Based on your initial code, `editor.get()` was likely meant to get the JSON content.
-      // For @blocknote/react v0.1.0 and above, `editor.document` holds the current content.
+      const blockNoteContent = editor.document;
 
       await updateDocument(document.id, {
         title,
@@ -95,12 +171,11 @@ const DocumentEditor = () => {
       console.log("Document saved successfully!");
     } catch (error) {
       console.error("Error saving document:", error);
-      // You might want to show a user-friendly error message here
     }
   }, [editor, document, title, updateDocument]);
 
   const handleShare = async () => {
-    setShareMessage(''); // Clear previous messages
+    setShareMessage('');
     if (!shareEmail || !shareRole) {
       setShareMessage('Please enter email and select a role.');
       return;
@@ -110,18 +185,22 @@ const DocumentEditor = () => {
       setShareMessage(`Successfully shared with ${shareEmail} as ${shareRole}.`);
       setShareEmail('');
       setShareRole('viewer');
-      setTimeout(() => setShowShareModal(false), 500); // Close modal after short delay
+      setTimeout(() => setShowShareModal(false), 500);
     } catch (error) {
       console.error('Error sharing document:', error);
       setShareMessage(`Failed to share: ${error.message}`);
-      // Modal stays open for user to correct errors
     }
   };
 
-
   const canEdit = userRole === 'editor' || userRole === 'admin';
-  const canShare = userRole === 'admin'; // Only admin can share
+  const canShare = userRole === 'admin';
   const documentActiveUsers = activeUsers[id] || [];
+  // Combine local active users with collaborative users from Y-Sweet
+  const allActiveUsers = [...documentActiveUsers, ...collaborativeUsers.map(cu => ({
+    userId: cu.user?.id,
+    userName: cu.user?.name,
+    color: cu.user?.color
+  }))];
 
   if (!document) {
     return (
@@ -166,8 +245,8 @@ const DocumentEditor = () => {
                 />
               </div>
               <div className="flex items-center gap-4">
-                {/* Active Users Indicator */}
-                <ActiveUsersIndicator users={documentActiveUsers} />
+                {/* Active Users Indicator - now shows collaborative users */}
+                <ActiveUsersIndicator users={allActiveUsers} />
 
                 {/* Share Button (only for admins) */}
                 {canShare && (
@@ -214,9 +293,12 @@ const DocumentEditor = () => {
                 {editor && (
                   <BlockNoteView
                     editor={editor}
-                    theme="dark" 
+                    theme={isDark ? "dark" : "light"}
                     editable={canEdit}
                     onChange={() => canEdit && setIsEditing(true)}
+                    onError={(error) => {
+                      console.warn('BlockNote error:', error);
+                    }}
                   />
                 )}
               </div>
@@ -291,4 +373,3 @@ const DocumentEditor = () => {
 };
 
 export default DocumentEditor;
-

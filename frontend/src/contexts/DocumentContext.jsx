@@ -12,7 +12,6 @@ import {
   onSnapshot,
   getDoc,
   arrayUnion,
-  arrayRemove,
   serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase'; 
