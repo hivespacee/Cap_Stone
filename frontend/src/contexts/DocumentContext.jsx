@@ -19,6 +19,7 @@ import {
 import { db } from '../config/firebase'; // db is your Firestore instance
 import { useAuth } from './AuthContext';
 import { io } from 'socket.io-client';
+import { v4 as uuidv4 } from 'uuid'; // Add this import at the top if not present
 
 const DocumentContext = createContext();
 
@@ -101,7 +102,7 @@ export const DocumentProvider = ({ children }) => {
 
   // Initialize socket connection
   useEffect(() => {
-    if (user && !socket) { // Only connect if user exists and socket is not already connected
+    if (user?.id && !socket) { // Only connect if user ID exists and socket is not already connected
       const newSocket = io('http://localhost:3001', {
         auth: {
           userId: user.id,
@@ -129,15 +130,19 @@ export const DocumentProvider = ({ children }) => {
       });
 
       setSocket(newSocket);
-
-      // Cleanup function for socket connection
       return () => {
         if (newSocket) {
           newSocket.disconnect();
         }
       };
     }
-  }, [user]);
+    // Only disconnect if user.id becomes falsy
+    if (!user?.id && socket) {
+      socket.disconnect();
+      setSocket(null);
+    }
+  // Only depend on user.id, not the whole user object
+  }, [user?.id]);
 
   // Function to create a new document
   const createDocument = async (title = 'Untitled', folderId = null) => {
@@ -341,18 +346,18 @@ export const DocumentProvider = ({ children }) => {
 
     try {
       const comment = {
-        id: Date.now().toString(), // Simple unique ID for now
+        id: uuidv4(), // Use UUID for unique comment IDs
         content,
         blockId, // Associate comment with a specific block in the editor
         userId: user.id,
         userName: user.name || user.email || 'Unknown User',
-        createdAt: serverTimestamp(), // Changed back to serverTimestamp for consistency
+        createdAt: new Date().toISOString(),
         resolved: false
       };
 
       const docRef = doc(db, 'docs', documentId);
       await updateDoc(docRef, {
-        comments: arrayUnion(comment), // Add the new comment to the array
+        comments: arrayUnion(comment),
         updatedAt: serverTimestamp()
       });
 

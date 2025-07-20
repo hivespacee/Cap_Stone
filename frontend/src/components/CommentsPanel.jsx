@@ -44,7 +44,7 @@ const CommentsPanel = ({ document, onClose }) => {
   };
 
   return (
-    <div className="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col">
+    <div className="w-80 bg-white dark:bg-gray-800 border-l border-gray-200 dark:border-gray-700 flex flex-col h-full max-h-screen">
       {/* Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ const CommentsPanel = ({ document, onClose }) => {
       </div>
 
       {/* Comments List */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {comments.length === 0 ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-8">
             <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-50" />

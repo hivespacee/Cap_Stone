@@ -72,10 +72,10 @@ const Dashboard = () => {
   return (
     <div className="flex h-screen bg-cream-light dark:bg-slate-dark *:border-none">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} onFullScreen={handleFullScreen} />
-      <div className="flex-1 flex flex-col overflow-hidden ">
+      <div className="flex-1 flex flex-col overflow-hidden min-h-0">
         <Header />
-        <main className="flex-1 overflow-auto p-6">
-          <div className="max-w-6xl mx-auto">
+        <main className="flex-1 overflow-auto p-6 min-h-0">
+          <div className="max-w-6xl mx-auto h-full flex flex-col min-h-0">
             <div className="flex justify-end mb-4">
               <button
                 onClick={handleFullScreen}
@@ -128,7 +128,7 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
-            <div className="grid lg:grid-cols-3 gap-6">
+            <div className="grid lg:grid-cols-3 gap-6 flex-1 min-h-0">
               {/* Recent Documents */}
               {/* <div className="lg:col-span-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
