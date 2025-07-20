@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { Edit3, Leaf, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Highlighter, Leaf, User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -51,28 +51,24 @@ const SignupPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-cream-light to-slate dark:from-charcoal-dark dark:to-charcoal">
-      <div className="w-full max-w-md">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-slate rounded-lg flex items-center justify-center">
-              <Edit3 className="w-5 h-5 text-white" />
+      <div className="w-full max-w-4xl flex shadow-lg rounded-lg overflow-hidden bg-white dark:bg-gray-800">
+        {/* Left Side  */}
+        <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-slate-light dark:bg-charcoal-light p-8">
+          <div className="mb-8">
+            <div className="w-16 h-16 bg-slate rounded-lg flex items-center justify-center mx-auto mb-4">
+              <Highlighter className="w-8 h-8 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">Chotaa Notion</span>
-          </Link>
+            <h2 className="text-3xl pl-13 font-bold text-slate-dark dark:text-white mb-2">Create Account</h2>
+            <p className="pl-10 text-gray-700 dark:text-gray-300">Register to get started</p>
+          </div>
         </div>
-
-        {/* Signup Card */}
-        <div className="card p-8 relative overflow-hidden">
-          {/* Decorative leaf */}
+        {/* Right Side */}
+        <div className="w-full md:w-1/2 p-8 relative">
           <div className="absolute top-4 right-4 opacity-20">
             <Leaf className="w-16 h-16 text-slate transform -rotate-12" />
           </div>
-          
           <div className="relative z-10">
-            <h1 className="pb-4 text-2xl font-bold text-slate mb-2">REGISTER</h1>
-            {/* <p className="text-gray-600 dark:text-gray-400 mb-6">Create your account to get started</p> */}
-
+            <h1 className="text-2xl font-bold text-slate mb-2">REGISTER</h1>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -164,7 +160,6 @@ const SignupPage = () => {
                 {loading ? 'Creating account...' : 'REGISTER'}
               </button>
             </form>
-
             <div className="mt-6 text-center">
               <span className="text-gray-600 dark:text-gray-400">Do you have an account? </span>
               <Link 

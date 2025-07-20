@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Edit3, Leaf, Mail, ArrowLeft } from 'lucide-react';
+import { Highlighter, Leaf, Mail, ArrowLeft } from 'lucide-react';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
@@ -34,7 +34,7 @@ const ForgotPasswordPage = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <div className="w-8 h-8 bg-slate rounded-lg flex items-center justify-center">
-              <Edit3 className="w-5 h-5 text-white" />
+              <Highlighter className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white">Chotaa Notion</span>
           </Link>

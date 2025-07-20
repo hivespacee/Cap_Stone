@@ -39,6 +39,7 @@ export const DocumentProvider = ({ children }) => {
   const [activeUsers, setActiveUsers] = useState({});
   const [documentComments, setDocumentComments] = useState({});
   
+  //load user documents
   useEffect(() => {
     if (!user) {
       setDocuments([]);
@@ -94,7 +95,7 @@ export const DocumentProvider = ({ children }) => {
     };
   }, [user]);
 
-  // Initialize socket connection
+  //initialize socket connection
   useEffect(() => {
     if (user?.id && !socket) {
       const newSocket = io('http://localhost:3001', {
@@ -104,7 +105,6 @@ export const DocumentProvider = ({ children }) => {
         }
       });
 
-      // Authenticate immediately after connection
       newSocket.on('connect', () => {
         newSocket.emit('authenticate', {
           userId: user.id,
@@ -116,12 +116,10 @@ export const DocumentProvider = ({ children }) => {
         setActiveUsers(users);
       });
 
-      // Listen for real-time document content updates (for collaborative editing)
       newSocket.on('documentUpdate', (data) => {
         console.log('Real-time document content updated via socket:', data);
       });
 
-      // Listen for comment updates (if comments are handled via sockets)
       newSocket.on('commentAdded', (commentData) => {
         console.log('New comment added via socket:', commentData);
 
@@ -138,15 +136,12 @@ export const DocumentProvider = ({ children }) => {
         }
       };
     }
-    // Only disconnect if user.id becomes falsy
     if (!user?.id && socket) {
       socket.disconnect();
       setSocket(null);
     }
-  // Only depend on user.id, not the whole user object
   }, [user?.id]);
 
-  // Function to create a new document
   const createDocument = async (title = 'Untitled', folderId = null) => {
     if (!user) {
       console.error('User not authenticated to create document.');
@@ -164,17 +159,17 @@ export const DocumentProvider = ({ children }) => {
         ],
         folderId,
         roles: {
-          [user.id]: 'admin' // Creator is always admin
+          [user.id]: 'admin' 
         },
-        members: [user.id], // Add creator to members array for querying
+        members: [user.id], 
         createdBy: user.id,
         createdByName: user.name || user.email || 'Unknown User',
-        createdAt: serverTimestamp(), // Use serverTimestamp for consistency
+        createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
         lastEditedBy: user.id,
         lastEditedByName: user.name || user.email || 'Unknown User',
-        activeUsers: [], // To be managed by sockets, not directly stored in Firestore for this purpose
-        comments: [] // Initialize comments array
+        activeUsers: [], 
+        comments: [] 
       };
 
       const docRef = await addDoc(collection(db, 'docs'), newDoc);
@@ -187,7 +182,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Function to update an existing document
   const updateDocument = async (id, updates) => {
     if (!user) {
       console.error('User not authenticated to update document.');
@@ -204,13 +198,12 @@ export const DocumentProvider = ({ children }) => {
 
       });
 
-      // Emit real-time update via socket for collaborative editing
       if (socket) {
         socket.emit('documentChange', {
           documentId: id,
           userId: user.id,
           userName: user.name,
-          changes: updates // Send the actual changes
+          changes: updates 
         });
       }
       console.log('Document updated successfully:', id);
@@ -221,7 +214,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Function to delete a document
   const deleteDocument = async (id) => {
     if (!user) {
       console.error('User not authenticated to delete document.');
@@ -238,7 +230,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Function to create a new folder
   const createFolder = async (name) => {
     if (!user) {
       console.error('User not authenticated to create folder.');
@@ -261,11 +252,10 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Function to share a document with another user by email (UPDATED)
   const shareDocument = async (documentId, email, role) => {
     if (!user) {
       console.error('User not authenticated to share document.');
-      return; // Or throw an error
+      return; 
     }
 
     try {
@@ -279,7 +269,6 @@ export const DocumentProvider = ({ children }) => {
       const docData = docSnap.data();
       const currentUserRole = docData.roles?.[user.id];
 
-      // Ensure current user is an admin to share
       if (currentUserRole !== 'admin') {
         throw new Error('Only admins can share documents.');
       }
@@ -309,7 +298,8 @@ export const DocumentProvider = ({ children }) => {
         lastEditedByName: user.name || user.email || 'Unknown User',
       });
       return true;
-    } catch (error) {
+    } 
+    catch (error) {
       console.error('Error sharing document:', error);
       throw new Error(`Failed to share document: ${error.message}`);
     }
@@ -327,7 +317,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Leave a document via socket
   const leaveDocument = (documentId) => {
     if (socket && user) {
       socket.emit('leaveDocument', {
@@ -338,7 +327,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Add a comment to a document
   const addComment = async (documentId, content, blockId = null) => {
     if (!user) {
       console.error('User not authenticated to add comment.');
@@ -347,9 +335,9 @@ export const DocumentProvider = ({ children }) => {
 
     try {
       const comment = {
-        id: uuidv4(), // Use UUID for unique comment IDs
+        id: uuidv4(), 
         content,
-        blockId, // Associate comment with a specific block in the editor
+        blockId, 
         userId: user.id,
         userName: user.name || user.email || 'Unknown User',
         createdAt: new Date().toISOString(),
@@ -362,7 +350,6 @@ export const DocumentProvider = ({ children }) => {
         updatedAt: serverTimestamp()
       });
 
-      // Emit comment addition via socket for real-time updates to other users
       if (socket) {
         socket.emit('addComment', {
           documentId,
@@ -377,7 +364,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Get user's role for a specific document
   const getUserRole = (document, userId = user?.id) => {
     if (!document || !userId) return null;
     return document.roles?.[userId] || null;
@@ -390,7 +376,7 @@ export const DocumentProvider = ({ children }) => {
     setCurrentDocument,
     loading,
     activeUsers,
-    documentComments, // Expose documentComments
+    documentComments,
     createDocument,
     updateDocument,
     deleteDocument,
@@ -400,7 +386,7 @@ export const DocumentProvider = ({ children }) => {
     leaveDocument,
     addComment,
     getUserRole,
-    socket // Expose socket for direct use if needed (e.g., cursor position)
+    socket
   };
 
   return (

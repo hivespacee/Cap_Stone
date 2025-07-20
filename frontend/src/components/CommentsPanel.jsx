@@ -61,7 +61,7 @@ const CommentsPanel = ({ document, onClose }) => {
         </button>
       </div>
 
-      {/* Comments List */}
+      
       <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {comments.length === 0 ? (
           <div className="text-center text-gray-500 dark:text-gray-400 py-8">
@@ -99,7 +99,7 @@ const CommentsPanel = ({ document, onClose }) => {
         )}
       </div>
 
-      {/* Add Comment Form */}
+      
       <div className="p-4 border-t border-gray-200 dark:border-gray-700">
         <form onSubmit={handleAddComment} className="space-y-3">
           <textarea

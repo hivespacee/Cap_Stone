@@ -7,7 +7,7 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import CommentsPanel from '../components/CommentsPanel';
 import ActiveUsersIndicator from '../components/ActiveUsersIndicator';
-import { Save, ArrowLeft, Edit3, Users, MessageSquare, Share2 } from 'lucide-react';
+import { Save, ArrowLeft, Highlighter, Users, MessageSquare, Share2 } from 'lucide-react';
 
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
@@ -21,7 +21,7 @@ const generateUserColor = (userId) => {
     '#3b82f6', '#ef4444', '#10b981', '#f59e0b', 
     '#8b5cf6', '#ec4899', '#06b6d4', '#84cc16'
   ];
-  if (typeof userId !== 'string') return colors[0]; // fallback color
+  if (typeof userId !== 'string') return colors[1]; // fallback color
   const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   return colors[hash % colors.length];
 };
@@ -208,7 +208,7 @@ const DocumentEditorContent = () => {
         <Sidebar />
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <Edit3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <Highlighter className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
               Loading document or document not found...
             </h2>

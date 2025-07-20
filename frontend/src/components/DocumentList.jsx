@@ -11,13 +11,14 @@ import {
   Trash2,
   Share2,
   Crown,
-  Edit3,
+  Highlighter,
   Eye
 } from 'lucide-react';
 
 const DocumentList = ({ isOpen }) => {
   const location = useLocation();
-  const { documents, folders, createDocument, createFolder, deleteDocument, getUserRole } = useDocuments();
+  const { documents, folders, createDocument, 
+    createFolder, deleteDocument, getUserRole } = useDocuments();
   const [expandedFolders, setExpandedFolders] = useState(new Set());
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -86,7 +87,7 @@ const DocumentList = ({ isOpen }) => {
       case 'admin':
         return <Crown className="w-3 h-3 text-yellow-500" title="Owner" />;
       case 'editor':
-        return <Edit3 className="w-3 h-3 text-blue-500" title="Editor" />;
+        return <Highlighter className="w-3 h-3 text-blue-500" title="Editor" />;
       case 'viewer':
         return <Eye className="w-3 h-3 text-gray-500" title="Viewer" />;
       default:
@@ -100,7 +101,6 @@ const DocumentList = ({ isOpen }) => {
   return (
     <>
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
-        {/* Folder Structure */}
         <div className="pt-4">
           <div className="flex items-center justify-between mb-2">
             {isOpen && (
@@ -274,7 +274,6 @@ const DocumentList = ({ isOpen }) => {
                placeholder="Document name"
                className="input-field mb-4"
                autoFocus
-               onKeyPress={(e) => e.key === 'Enter' && handleConfirmCreateDocument()}
              />
              <div className="flex gap-3 justify-end">
                <button onClick={() => setShowNewDocModal(false)} className="btn-secondary">Cancel</button>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, Edit3, Folder, Users, Zap } from 'lucide-react';
+import { ArrowRight, Highlighter, Folder, Users, Zap } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 
 const LandingPage = () => {
@@ -11,7 +11,7 @@ const LandingPage = () => {
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-slate rounded-lg flex items-center justify-center">
             
-              <Edit3 className="w-5 h-5 text-white" />
+              <Highlighter className="w-5 h-5 text-white" />
             
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white">Chotaa Notion</span>
@@ -61,7 +61,7 @@ const LandingPage = () => {
           <div className="flex items-center justify-center gap-2 mb-4">
             <div className="w-6 h-6 bg-slate rounded flex items-center justify-center">
           
-              <Edit3 className="w-4 h-4 text-white" />
+              <Highlighter className="w-4 h-4 text-white" />
           
             </div>
             <span className="font-semibold text-gray-900 dark:text-slate-dark"> Team Chotaa Notion</span>

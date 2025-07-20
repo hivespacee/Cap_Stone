@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import DocumentList from './DocumentList'; // Import the new component
+import DocumentList from './DocumentList';
 import {
-  Edit3,
+  Highlighter,
   Home,
   Settings,
   ChevronsLeft,
@@ -25,12 +25,12 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         transition: 'min-width 0.5s cubic-bezier(0.4,0,0.2,1), max-width 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s'
       }}
     >
-      {/* Logo and Collapse Button */}
+
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
         {isOpen && (
           <Link to="/dashboard" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-slate-500 rounded-lg flex items-center justify-center flex-shrink-0">
-              <Edit3 className="w-5 h-5 text-white" />
+              <Highlighter className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-gray-900 dark:text-white">Chotaa Notion</span>
           </Link>
@@ -42,7 +42,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </div>
       </div>
       
-      {/* Main Dashboard Link */}
+      
       <div className="p-4">
         <Link
             to="/dashboard"
@@ -54,18 +54,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         </Link>
       </div>
 
-      {/* Document List (now its own component) */}
       <DocumentList isOpen={isOpen} />
 
-      {/* Settings */}
-      {/* 
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-        <button className="sidebar-item w-full" title="Settings">
-          <Settings className="w-5 h-5 flex-shrink-0" />
-          {isOpen && <span className="truncate">Settings</span>}
-        </button>
-      </div>
-      */}
     </div>
   );
 };

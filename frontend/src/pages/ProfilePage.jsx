@@ -15,12 +15,6 @@ const ProfilePage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    // In a real app, this would update the user profile
-    console.log('Saving profile...', { name, email });
-    setIsEditing(false);
-  };
-
   return (
     <div className="flex h-screen bg-cream dark:bg-slate-dark *:border-none">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
@@ -32,13 +26,11 @@ const ProfilePage = () => {
           <div className="max-w-2xl mx-auto">
             <div className="card p-8">
               
-              {/* Back button */}
               <button
                 onClick={() => navigate('/dashboard')}
                 className="flex items-center gap-2 mb-6 text-gray-600 dark:text-gray-300 hover:text-slate dark:hover:text-white transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
-                {/* <span className="font-medium">Back</span> */}
               </button>
               
               <div className="text-center mb-8">
@@ -76,25 +68,7 @@ const ProfilePage = () => {
                 
                 </div>
 
-                {/* <div className="flex gap-4 pt-1">
-                  
-                  {isEditing ? (
-                    <>
-                      <button onClick={handleSave} className="btn-primary flex items-center gap-2">
-                        <Save className="w-4 h-4" />
-                        Save Changes
-                      </button>
-                      <button onClick={() => setIsEditing(false)} className="btn-secondary">
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <button onClick={() => setIsEditing(true)} className="btn-primary">
-                      Edit Profile
-                    </button>
-                  )}
                 
-                </div> */}
               </div>
 
               

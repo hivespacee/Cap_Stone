@@ -35,20 +35,11 @@ const Header = () => {
   return (
     <header className="border-none border-gray-200 dark:border-gray-700 px-6 py-1">
       <div className="flex items-center justify-between">
-        {/* Search */}
-        <div className="flex-1 max-w-lg">
-          
-        </div>
+        <div className="flex-1 max-w-lg"></div>
 
-        {/* Right side */}
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          
-          {/* <button className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors">
-            <Bell className="w-5 h-5" />
-          </button> */}
 
-          {/* User Menu */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setShowDropdown(!showDropdown)}

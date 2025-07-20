@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { Edit3, Leaf, Mail, Lock, Eye, EyeOff, ArrowRight, LogIn } from 'lucide-react';
+import { Highlighter, Leaf, Mail, Lock, Eye, EyeOff, ArrowRight, LogIn } from 'lucide-react';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -48,19 +48,19 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-cream-light to-slate dark:from-charcoal-light dark:to-charcoal">
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-gradient-to-br from-cream-light to-slate dark:from-charcoal-dark dark:to-charcoal">
       <div className="w-full max-w-4xl flex shadow-lg rounded-lg overflow-hidden bg-white dark:bg-gray-800">
-        {/* Left Side - Illustration or Info */}
+        {/* Left Side */}
         <div className="hidden md:flex flex-col justify-center items-center w-1/2 bg-slate-light dark:bg-charcoal-light p-8">
           <div className="mb-8">
             <div className="w-16 h-16 bg-slate rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Edit3 className="w-8 h-8 text-white" />
+              <Highlighter className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-3xl pl-13 font-bold text-slate-dark dark:text-white mb-2">Welcome Back!</h2>
             <p className="pl-10 text-gray-700 dark:text-gray-300">Sign in to continue</p>
           </div>
         </div>
-        {/* Right Side - Login Form */}
+        {/* Right Side */}
         <div className="w-full md:w-1/2 p-8 relative">
           <div className="absolute top-4 right-4 opacity-20">
             <Leaf className="w-16 h-16 text-slate transform rotate-12" />
