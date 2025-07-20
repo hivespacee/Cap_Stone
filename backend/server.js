@@ -1,86 +1,58 @@
-// backend_here/server.js
-
-// Import necessary modules
-import express, { json } from 'express'; // Use ES module syntax for express and json
+import express from 'express';
 import { createServer } from 'http';
-import { Server } from 'socket.io'; // Use named import for Server
+import { Server } from 'socket.io';
 import cors from 'cors';
-import { v4 as uuidv4 } from 'uuid'; // Imported but not used, can be removed if not needed
-
-// Firebase Admin SDK (optional - add your credentials)
-// This section is commented out, but if you need to perform server-side
-// operations like looking up user UIDs by email for sharing, you would
-// uncomment and configure this.
-// import admin from 'firebase-admin'; // Use ES module syntax for admin
-// import serviceAccount from './firebase-service-account.json'; // Adjust path as needed
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-//   databaseURL: "https://your-project-id.firebaseio.com"
-// });
-// const db = admin.firestore(); // If you need Firestore in backend
-// const auth = admin.auth();   // If you need Auth in backend
+import registerDocumentSocket from './sockets/documentSocket.js';
 
 const app = express();
 const server = createServer(app);
 
-// Configure CORS for Socket.IO and Express
-// IMPORTANT: Replace 'http://localhost:5173' with the actual origin of your frontend application
-// In a production environment, this should be your deployed frontend URL.
-const allowedOrigin = 'http://localhost:5173'; // Your React app's Vite development server URL
+const allowedOrigin = 'http://localhost:5173';
 
 app.use(cors({
   origin: allowedOrigin,
   methods: ['GET', 'POST']
 }));
-app.use(json()); // For parsing JSON request bodies in Express routes
 
-// Initialize Socket.IO server with CORS configuration
-const io = new Server(server, {
-  cors: {
-    origin: allowedOrigin,
-    methods: ["GET", "POST"],
-    credentials: true // Allow cookies to be sent (if your auth system uses them)
-  }
-});
-
-// Store active users and document sessions
-// activeUsers: Maps documentId to a Set of socketIds currently in that document.
-const activeUsers = new Map();
-// userSessions: Maps socketId to comprehensive user session info (userId, userName, currentDocument).
-const userSessions = new Map();
-// documentCursors: Maps documentId to a Map of userId to their cursor/selection data.
-const documentCursors = new Map();
-
-// Health check endpoint for basic server status monitoring
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Socket.IO connection handling
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigin,
+    methods: ["GET", "POST"],
+    credentials: true // maybe used for cookies permission
+    }
+});
+registerDocumentSocket(io);
+
+
+const activeUsers = new Map();
+const userSessions = new Map();
+const documentCursors = new Map();
+
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
-  // Handle user authentication after initial connection
-  // This is a good pattern to receive user details securely after the handshake.
   socket.on('authenticate', (userData) => {
     if (!userData || !userData.userId || !userData.userName) {
       console.warn(`Authentication failed for socket ${socket.id}: Missing user data.`);
-      socket.disconnect(true); // Disconnect unauthenticated user
+      socket.disconnect(true); 
       return;
     }
     userSessions.set(socket.id, {
       userId: userData.userId,
       userName: userData.userName,
       socketId: socket.id,
-      currentDocument: null // Initialize current document as null
+      currentDocument: null
     });
     console.log(`User authenticated: ${userData.userName} (ID: ${userData.userId})`);
   });
 
   // Handle joining a document
   socket.on('joinDocument', (data) => {
-    const { documentId } = data; // Only need documentId from client
+    const { documentId } = data;
     const userSession = userSessions.get(socket.id);
 
     // Ensure the user is authenticated before allowing them to join a document

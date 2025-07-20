@@ -6,6 +6,10 @@
   font-family: 'Rubik', sans-serif;
 }
 
+html, body, #root {
+  transition: background 0.4s cubic-bezier(0.4,0,0.2,1), color 0.3s, border-color 0.3s;
+}
+
 @layer components {
   .btn-primary {
     @apply bg-slate text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-dark transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-slate focus:ring-opacity-50;

@@ -22,7 +22,7 @@ function App() {
   return (
     <ToastProvider>
       <div className={isDark ? 'dark' : ''}>
-        <div className="min-h-screen bg-cream dark:bg-charcoal transition-colors duration-300">
+        <div className="min-h-screen bg-cream dark:bg-charcoal transition-colors duration-300 animate-fade-in">
           <Routes>
             <Route 
               path="/" 

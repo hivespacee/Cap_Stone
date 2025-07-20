@@ -1,9 +1,8 @@
-// DocumentContext.jsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import {
   collection,
   doc,
-  getDocs, // Keep this for querying 'users'
+  getDocs, 
   addDoc,
   updateDoc,
   deleteDoc,
@@ -16,10 +15,10 @@ import {
   arrayRemove,
   serverTimestamp
 } from 'firebase/firestore';
-import { db } from '../config/firebase'; // db is your Firestore instance
+import { db } from '../config/firebase'; 
 import { useAuth } from './AuthContext';
 import { io } from 'socket.io-client';
-import { v4 as uuidv4 } from 'uuid'; // Add this import at the top if not present
+import { v4 as uuidv4 } from 'uuid';
 
 const DocumentContext = createContext();
 
@@ -41,14 +40,13 @@ export const DocumentProvider = ({ children }) => {
   const [activeUsers, setActiveUsers] = useState({});
   const [documentComments, setDocumentComments] = useState({});
 
-  // Load documents and folders when user changes or on initial load
   useEffect(() => {
     if (!user) {
       setDocuments([]);
       setFolders([]);
       if (socket) {
         socket.disconnect();
-        setSocket(null); // Clear socket state
+        setSocket(null);
       }
       return;
     }
@@ -60,8 +58,7 @@ export const DocumentProvider = ({ children }) => {
       orderBy('updatedAt', 'desc')
     );
 
-    // Set up real-time listener for documents
-    const unsubscribeDocuments = onSnapshot(documentsQuery, (snapshot) => {
+      const unsubscribeDocuments = onSnapshot(documentsQuery, (snapshot) => {
       const docs = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
@@ -73,7 +70,6 @@ export const DocumentProvider = ({ children }) => {
       setLoading(false);
     });
 
-    // Set up real-time listener for folders
     const foldersQuery = query(
       collection(db, 'folders'), where('userId', '==', user.id),
       orderBy('createdAt', 'desc')
@@ -89,20 +85,19 @@ export const DocumentProvider = ({ children }) => {
         console.error("Firestore onSnapshot error for folders:", error);
     });
 
-    // Cleanup function for the effect
     return () => {
-      unsubscribeDocuments(); // Unsubscribe from document listener
-      unsubscribeFolders();   // Unsubscribe from folder listener
+      unsubscribeDocuments(); 
+      unsubscribeFolders(); 
       if (socket) {
         socket.disconnect();
-        setSocket(null) // Disconnect socket on unmount or user change
+        setSocket(null)
       }
     };
   }, [user]);
 
   // Initialize socket connection
   useEffect(() => {
-    if (user?.id && !socket) { // Only connect if user ID exists and socket is not already connected
+    if (user?.id && !socket) {
       const newSocket = io('http://localhost:3001', {
         auth: {
           userId: user.id,
@@ -313,7 +308,6 @@ export const DocumentProvider = ({ children }) => {
     }
   };
 
-  // Join a document via socket for real-time presence
   const joinDocument = (documentId) => {
     if (socket && user) {
       socket.emit('joinDocument', {

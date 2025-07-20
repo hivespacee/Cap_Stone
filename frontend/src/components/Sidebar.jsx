@@ -13,7 +13,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
 
   return (
     <div
-      className={`flex flex-col h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-700 ease-in-out
+      className={`flex flex-col h-full bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-500 ease-in-out
         ${isOpen ? 'w-70 shadow-xl' : 'w-20 shadow-md'}
       `}
       style={{
@@ -21,7 +21,8 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
         maxWidth: isOpen ? '280px' : '80px',
         boxShadow: isOpen
           ? '0 2px 16px 0 rgba(60,60,60,0.10)'
-          : '0 2px 8px 0 rgba(60,60,60,0.06)'
+          : '0 2px 8px 0 rgba(60,60,60,0.06)',
+        transition: 'min-width 0.5s cubic-bezier(0.4,0,0.2,1), max-width 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s'
       }}
     >
       {/* Logo and Collapse Button */}

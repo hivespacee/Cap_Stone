@@ -34,39 +34,28 @@ const DocumentEditor = () => {
     if (doc) {
       setDocument(doc);
       setTitle(doc.title);
-      // Ensure initialContent is set only once or when doc.content truly changes
-      // This prevents BlockNote from re-initializing unnecessarily.
       if (JSON.stringify(initialContent) !== JSON.stringify(doc.content)) {
         setInitialContent(doc.content || null);
       }
       setUserRole(getUserRole(doc));
 
-      // Join document for real-time collaboration
       joinDocument(doc.id);
-    } else {
-      // If document is not found, navigate to dashboard after a short delay
-      // to allow for potential real-time updates to fetch it.
+      return () => {
+        leaveDocument(doc.id);
+      };
+    } 
+    else {
       const timeoutId = setTimeout(() => {
         if (!documents.find((d) => d.id === id)) {
           navigate('/dashboard');
         }
-      }, 1000); // Wait 1 second before redirecting
-
+      }, 1000);
       return () => clearTimeout(timeoutId);
     }
+  }, [id, documents, navigate]);
 
-    // Cleanup: leave document when component unmounts
-    return () => {
-      if (doc) {
-        leaveDocument(doc.id);
-      }
-    };
-  }, [id, documents, navigate, joinDocument, leaveDocument, getUserRole, initialContent]);
-
-  // Initialize BlockNote editor only when initialContent is available
-  // Do NOT pass `editable` or other deprecated options directly to useCreateBlockNote
   const editor = useCreateBlockNote({
-    initialContent: initialContent || undefined, // Pass undefined if null to use default empty editor
+    initialContent: initialContent || undefined, 
   });
 
   // Effect to update editor content when document content changes from other sources (e.g., real-time updates)
@@ -151,9 +140,9 @@ const DocumentEditor = () => {
   }
 
   return (
-    <div className="flex h-screen bg-cream dark:bg-charcoal">
+    <div className="flex h-screen bg-cream dark:bg-charcoal animate-fade-in transition-colors duration-300">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+      <div className="flex-1 flex flex-col overflow-hidden min-h-0 animate-slide-up transition-all duration-300">
         <Header />
         <div className="flex-1 flex flex-col min-h-0">
           {/* Editor Header */}
@@ -225,7 +214,7 @@ const DocumentEditor = () => {
                 {editor && (
                   <BlockNoteView
                     editor={editor}
-                    theme="light" // Or "dark" based on your theme
+                    theme="dark" 
                     editable={canEdit}
                     onChange={() => canEdit && setIsEditing(true)}
                   />
@@ -244,8 +233,8 @@ const DocumentEditor = () => {
 
       {/* Share Document Modal */}
       {showShareModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-xl w-96">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300 animate-fade-in">
+          <div className="bg-white dark:bg-gray-700 p-6 rounded-lg shadow-xl w-96 animate-slide-up transition-all duration-300">
             <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Share Document</h3>
             <div className="mb-4">
               <label htmlFor="shareEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -302,6 +291,4 @@ const DocumentEditor = () => {
 };
 
 export default DocumentEditor;
-};
 
-export default DocumentEditor;

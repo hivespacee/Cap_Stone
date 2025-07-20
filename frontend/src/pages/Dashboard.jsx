@@ -70,23 +70,12 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-cream-light dark:bg-slate-dark *:border-none">
+    <div className="flex h-screen bg-cream-light dark:bg-slate-dark *:border-none animate-fade-in transition-colors duration-300">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} onFullScreen={handleFullScreen} />
-      <div className="flex-1 flex flex-col overflow-hidden min-h-0">
+      <div className="flex-1 flex flex-col overflow-hidden min-h-0 animate-slide-up transition-all duration-300">
         <Header />
         <main className="flex-1 overflow-auto p-6 min-h-0">
           <div className="max-w-6xl mx-auto h-full flex flex-col min-h-0">
-            <div className="flex justify-end mb-4">
-              <button
-                onClick={handleFullScreen}
-                className="btn-secondary flex items-center gap-2"
-                title="Full Screen"
-              >
-                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path d="M4 4h6M4 4v6M20 20h-6M20 20v-6M20 4v6M20 4h-6M4 20v-6M4 20h6"/>
-                </svg>
-              </button>
-            </div>
             <div className="mb-8">
               <p className="text-gray-600 dark:text-gray-300">
                 Ready to create something amazing today?
@@ -127,72 +116,6 @@ const Dashboard = () => {
                   </button>
                 </div>
               )}
-            </div>
-            <div className="grid lg:grid-cols-3 gap-6 flex-1 min-h-0">
-              {/* Recent Documents */}
-              {/* <div className="lg:col-span-2">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-                  <Clock className="w-5 h-5" />
-                  Recent Documents
-                </h2>
-                <div className="space-y-3">
-                  {recentDocuments.length > 0 ? (
-                    recentDocuments.map(doc => (
-                      <Link
-                        key={doc.id}
-                        to={`/document/${doc.id}`}
-                        className="card p-4 hover:shadow-lg transition-all duration-300 group flex items-center justify-between"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-slate-light rounded-lg flex items-center justify-center text-white">
-                            <FileText className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <h3 className="font-medium text-gray-900 dark:text-white group-hover:text-slate transition-colors">
-                              {doc.title}
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              Updated {formatDate(doc.updatedAt)}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    ))
-                  ) : (
-                    <div className="card p-8 text-center">
-                      <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <h3 className="font-medium text-gray-900 dark:text-white mb-2">No documents yet</h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-4">Create your first document to get started</p>
-                      <button onClick={handleCreateDocument} className="btn-primary">
-                        Create Document
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div> */}
-
-              {/* All Documents */}
-              {/* <div>
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  All Documents
-                </h2>
-                <div className="space-y-2 max-h-96 overflow-y-auto">
-                  {filteredDocuments.map(doc => (
-                    <Link
-                      key={doc.id}
-                      to={`/document/${doc.id}`}
-                      className="block p-3 rounded-lg hover:bg-cream-light dark:hover:bg-charcoal-light transition-colors"
-                    >
-                      <h4 className="font-medium text-gray-900 dark:text-white text-sm truncate">
-                        {doc.title}
-                      </h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {formatDate(doc.updatedAt)}
-                      </p>
-                    </Link>
-                  ))}
-                </div>
-              </div> */}
             </div>
           </div>
         </main>

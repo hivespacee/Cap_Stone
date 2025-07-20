@@ -66,7 +66,7 @@ const ProfilePage = () => {
                 
                 </div>
 
-                <div className="flex gap-4 pt-1">
+                {/* <div className="flex gap-4 pt-1">
                   
                   {isEditing ? (
                     <>
@@ -84,7 +84,7 @@ const ProfilePage = () => {
                     </button>
                   )}
                 
-                </div>
+                </div> */}
               </div>
 
               
