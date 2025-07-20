@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { User, Mail, Save } from 'lucide-react';
+import { User, Mail, Save, ArrowLeft } from 'lucide-react';
 import { useDocuments } from '../contexts/DocumentContext';
-
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ const ProfilePage = () => {
   const [email, setEmail] = useState(user?.email || '');
   const [isEditing, setIsEditing] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const navigate = useNavigate();
 
   const handleSave = () => {
     // In a real app, this would update the user profile
@@ -31,6 +31,16 @@ const ProfilePage = () => {
         <main className="flex-1 overflow-auto p-6">
           <div className="max-w-2xl mx-auto">
             <div className="card p-8">
+              
+              {/* Back button */}
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center gap-2 mb-6 text-gray-600 dark:text-gray-300 hover:text-slate dark:hover:text-white transition-colors"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                {/* <span className="font-medium">Back</span> */}
+              </button>
+              
               <div className="text-center mb-8">
                 
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Profile</h1>

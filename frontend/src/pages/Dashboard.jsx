@@ -78,7 +78,7 @@ const Dashboard = () => {
           <div className="max-w-6xl mx-auto h-full flex flex-col min-h-0">
             <div className="mb-8">
               <p className="text-gray-600 dark:text-gray-300">
-                Ready to create something amazing today?
+                Let's go create something amazing today !
               </p>
             </div>
             <div className="mb-8">
@@ -88,7 +88,7 @@ const Dashboard = () => {
                     Continue where you left off
                   </h2>
                   <h3 className="font-medium text-slate-dark dark:text-white text-lg">
-                    {recentDoc.title}
+                    File : {recentDoc.title}
                   </h3>
                   {activeUsers[recentDoc.id] && activeUsers[recentDoc.id].length > 0 && (
                     <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
@@ -96,10 +96,10 @@ const Dashboard = () => {
                       <span>{activeUsers[recentDoc.id].length} user(s) active</span>
                     </div>
                   )}
-                  <div className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
-                    {/* Show a preview of the document content if available */}
-                    {recentDoc.content?.content?.[0]?.content?.[0]?.text || 'No preview available.'}
-                  </div>
+                  {/* <div className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3">
+                    Show a preview of the document content if available
+                    {recentDoc.content?.content?.[0]?.content?.[0]?.text }
+                  </div> */}
                   <Link
                     to={`/document/${recentDoc.id}`}
                     className="btn-primary w-fit mt-2"

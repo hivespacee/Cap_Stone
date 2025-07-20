@@ -39,7 +39,7 @@ export const DocumentProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [activeUsers, setActiveUsers] = useState({});
   const [documentComments, setDocumentComments] = useState({});
-
+  
   useEffect(() => {
     if (!user) {
       setDocuments([]);
@@ -103,6 +103,14 @@ export const DocumentProvider = ({ children }) => {
           userId: user.id,
           userName: user.name
         }
+      });
+
+      // Authenticate immediately after connection
+      newSocket.on('connect', () => {
+        newSocket.emit('authenticate', {
+          userId: user.id,
+          userName: user.name
+        });
       });
 
       newSocket.on('activeUsers', (users) => {
