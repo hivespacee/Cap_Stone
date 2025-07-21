@@ -3,7 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 
 const server = createServer();
-const allowedOrigin = 'http://localhost:5173';
+const allowedOrigin = import.meta.env.FRONTEND_BASE_URL || 'http://localhost:5173';
 
 const io = new Server(server, {
   cors: {

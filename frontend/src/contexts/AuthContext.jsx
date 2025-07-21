@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
     try {
       await setDoc(userRef, userProfileData, { merge: true });
-      console.log("User profile updated/created in Firestore:", userProfileData);
+      console.log("User profile updated successfully");
     } 
     catch (error) {
       console.error("Error creating/updating user profile in Firestore:", error);

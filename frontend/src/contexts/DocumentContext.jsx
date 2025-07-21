@@ -98,7 +98,8 @@ export const DocumentProvider = ({ children }) => {
   //initialize socket connection
   useEffect(() => {
     if (user?.id && !socket) {
-      const newSocket = io('http://localhost:3001', {
+      const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+      const newSocket = io(apiBaseUrl, {
         auth: {
           userId: user.id,
           userName: user.name
