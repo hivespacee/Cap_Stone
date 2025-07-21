@@ -46,17 +46,8 @@ Chotaa Notion is a modern, collaborative document editing platform inspired by N
 
 ### High-Level Architecture
 
-```
-[ Client (React/Vite) ] <---> [ Backend (Express/Bun) ] <---> [ Firebase (Firestore, Auth) ]
-         |                                 |
-         |<------ Socket.IO (WebSocket) ----|
-         |                                 |
-         |<------ REST API (Express) ------|
-```
+<img width="648" height="498" alt="image" src="https://github.com/user-attachments/assets/b5489035-5469-438d-b92f-d73e4b328c35" />
 
-- **Frontend** connects to backend via REST for CRUD and via Socket.IO for real-time events.
-- **Backend** acts as a gateway, handling authentication, document updates, and real-time events.
-- **Firebase** stores user profiles, documents, folders, and handles authentication.
 
 ### Low-Level Design
 
