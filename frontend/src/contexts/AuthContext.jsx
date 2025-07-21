@@ -85,6 +85,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const signup = async (name, email, password) => {
+    if (name.length < 4 || name.length > 20) {
+      throw new Error('Username must be between 4 and 20 characters');
+      return;
+    }
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(result.user, {

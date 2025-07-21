@@ -23,6 +23,13 @@ const SignupPage = () => {
     setLoading(true);
     setError('');
 
+    if (name.length < 4 || name.length > 20) {
+      showToast('Username must be between 4 and 20 characters', 'error');
+      setError('Username must be between 4 and 20 characters');
+      setLoading(false);
+      return;
+    }
+
     if (password !== confirmPassword) {
       showToast('Passwords do not match', 'error');
       setError('Passwords do not match');
