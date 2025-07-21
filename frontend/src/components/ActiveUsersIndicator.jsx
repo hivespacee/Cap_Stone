@@ -13,7 +13,7 @@ const ActiveUsersIndicator = ({ users = [] }) => {
         <div className="flex -space-x-2">
           {displayUsers.map((user, index) => (
             <div
-              key={user.userId}
+              key={index}
               className="w-8 h-8 rounded-full bg-slate text-white text-xs flex items-center justify-center border-2 border-white dark:border-gray-800"
               title={user.userName}
               style={{ zIndex: displayUsers.length - index }}
