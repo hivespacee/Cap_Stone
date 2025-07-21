@@ -1,76 +1,107 @@
-Chotaa Notion - Project Documentation
+# Chotaa Notion – Project Documentation
 
-Overview:
-Chotaa Notion is a collaborative document editing platform inspired by Notion. It allows users to create, edit, and share documents in real time, with a modern and user-friendly interface.
+## Overview
 
-Tech Stack:
-Frontend:
-- React (JSX, hooks) (Bun runtime)
-- Vite
-- Tailwind CSS
-- Lucide React (icons)
-- Firebase (auth, Firestore, storage)
-- Socket.IO (real-time)
-- BlockNote (rich text editor) +  Y-Sweet/Yjs (real-time sync)
+**Chotaa Notion** is a modern, collaborative document editing platform inspired by Notion. It enables users to create, edit, organize, and share documents and folders in real time. The platform features a rich text editor, real-time collaboration, comments, sharing with permissions, and a user-friendly interface designed for productivity and teamwork.
 
-Backend:
-- Node.js (Bun runtime)
-- Express
-- Socket.IO
-- Firebase Admin SDK
-- CORS, dotenv
+---
 
-Features:
-- Email/password and Google login
-- Create, edit, delete, organize documents and folders
-- Real-time collaboration (multiple users editing)
-- Comments and sharing with permissions (viewer, editor, admin)
-- Rich text editor
-- Dashboard with recent documents and search
-- Responsive design, dark/light theme
-- Notifications and user profile management
+## Tech Stack
 
-System Design:
-- Frontend connects to backend via Socket.IO for real-time updates, manages authentication and file operations.
-- Backend manages stable socket connections.
-- Firebase stores users, documents, folders, and handles authentication.
+### Frontend
+- **React** (with hooks, JSX, Bun runtime)
+- **Vite** (fast development/build tool)
+- **Tailwind CSS** (utility-first styling)
+- **Lucide React** (icon library)
+- **Firebase** (authentication, Firestore, storage)
+- **Socket.IO** (real-time communication)
+- **BlockNote + Y-Sweet/Yjs** (rich text editor with real-time sync)
 
-UI/UX:
-- Clean, modern design with Tailwind CSS and Rubik font
-- Followed 60-30-10 color theory for color scheme
-- Sidebar navigation, dashboard, modals for actions
-- Shows active users and live cursors
-- Works on desktop and mobile
+### Backend
+- **Node.js** (Bun runtime)
+- **Express** (web server)
+- **Socket.IO** (real-time server)
+- **Firebase Admin SDK** (server-side Firebase)
+- **CORS, dotenv** (security and configuration)
 
-Performance:
-Client:
-- Virtual scrolling for large docs
-- Lazy loading for pages
-Server:
-- Connection pooling
-- Caching
-- Rate limiting
+---
 
-Suggestions:
-- Offline editing
-- Document version history
-- Push/email notifications
-- Export/import options
-- Advanced permissions
-- AI features
-- Mobile app
+## Features
 
-Getting Started:
-1. Install dependencies (
-    frontend: bun install, 
-    backend: bun install
-   )
-2. Set up .env files for Firebase and API URLs
-3. Run frontend (bun run dev) and
-       backend (bun run)
-4. Open the app in your browser
+- **Authentication:** Email/password and Google login.
+- **Document Management:** Create, edit, delete, and organize documents and folders.
+- **Real-Time Collaboration:** Multiple users can edit the same document simultaneously, with live cursor and user presence indicators.
+- **Comments & Permissions:** Add comments to specific text, resolve them, and manage permissions (viewer, editor, admin).
+- **Rich Text Editing:** Modern, block-based editor with formatting and media support.
+- **Dashboard:** View recent documents, search, and navigate easily.
+- **Responsive Design:** Works seamlessly on desktop and mobile, with dark/light theme support.
+- **Notifications & Profile:** User profile management and in-app notifications.
 
-Folder Structure:
+---
+
+## System Design
+
+- **Frontend:**  
+  - Connects to the backend via Socket.IO for real-time updates.
+  - Manages authentication, document operations, and UI state.
+  - Uses BlockNote and Yjs for collaborative editing and comments.
+- **Backend:**  
+  - Manages stable socket connections and real-time events.
+  - Handles authentication and authorization via Firebase Admin SDK.
+  - Stores users, documents, folders, and comments in Firestore.
+
+---
+
+## UI/UX
+
+- Clean, modern interface using Tailwind CSS and Rubik font.
+- Sidebar navigation, dashboard, and modals for key actions.
+- Visual indicators for active users and live cursors.
+- Color scheme follows the 60-30-10 design rule.
+- Fully responsive for both desktop and mobile.
+
+---
+
+## Performance
+
+- **Client:**
+  - Virtual scrolling for large documents.
+  - Lazy loading for pages and assets.
+- **Server:**
+  - Connection pooling and caching.
+  - Rate limiting for security and stability.
+
+---
+
+## Suggestions for Future Improvements
+
+- Offline editing support.
+- Document version history and rollback.
+- Push/email notifications.
+- Export/import options (PDF, Markdown, etc.).
+- Advanced permission management.
+- AI-powered features (summarization, suggestions).
+- Dedicated mobile app.
+
+---
+
+## Getting Started
+
+1. **Install dependencies:**
+   - Frontend: `bun install`
+   - Backend: `bun install`
+2. **Set up environment variables:**
+   - Configure `.env` files for Firebase and API URLs in both frontend and backend.
+3. **Run the application:**
+   - Frontend: `bun run dev`
+   - Backend: `bun run`
+4. **Open the app in your browser** and start collaborating!
+
+---
+
+## Folder Structure
+
+```
 project/
   frontend/
     src/
@@ -88,3 +119,14 @@ project/
     README.md
   docs/
     FirstDocumentationCapstone
+```
+
+---
+
+## Contact & Contribution
+
+For questions, suggestions, or contributions, please open an issue or pull request on the project repository.
+
+---
+
+**Chotaa Notion** – Empowering teams to collaborate, create, and organize knowledge in real time.

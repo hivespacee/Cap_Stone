@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import Sidebar from '../components/Sidebar';
@@ -30,18 +30,17 @@ const Dashboard = () => {
     }
   }, [documents]);
 
-  const filteredDocuments = documents.filter(doc => {
+  const filteredDocuments = useMemo(() => documents.filter(doc => {
     const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFolder = selectedFolder ? doc.folderId === selectedFolder : true;
     return matchesSearch && matchesFolder;
-  });
+  }), [documents, searchQuery, selectedFolder]);
 
-  const recentDocuments = documents.sort((a, b) => {
-        const dateA = a.updatedAt ? new Date(a.updatedAt) : new Date(0);
-        const dateB = b.updatedAt ? new Date(b.updatedAt) : new Date(0);
-        return dateB - dateA;
-    })
-    .slice(0, 5);
+  const recentDocuments = useMemo(() => documents.slice().sort((a, b) => {
+    const dateA = a.updatedAt ? new Date(a.updatedAt) : new Date(0);
+    const dateB = b.updatedAt ? new Date(b.updatedAt) : new Date(0);
+    return dateB - dateA;
+  }).slice(0, 5), [documents]);
 
   const handleCreateDocument = () => {
     setShowNewDocModal(true);

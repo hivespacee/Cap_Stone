@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import ShareDocumentModal from './ShareDocumentModal';
@@ -28,58 +28,60 @@ const DocumentList = ({ isOpen }) => {
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [shareModalDoc, setShareModalDoc] = useState(null);
 
-  const toggleFolder = (folderId) => {
-    const newExpanded = new Set(expandedFolders);
-    if (newExpanded.has(folderId)) {
-      newExpanded.delete(folderId);
-    } else {
-      newExpanded.add(folderId);
-    }
-    setExpandedFolders(newExpanded);
-  };
+  const toggleFolder = useCallback((folderId) => {
+    setExpandedFolders(prev => {
+      const newExpanded = new Set(prev);
+      if (newExpanded.has(folderId)) {
+        newExpanded.delete(folderId);
+      } else {
+        newExpanded.add(folderId);
+      }
+      return newExpanded;
+    });
+  }, []);
 
-  const handleCreateFolder = () => {
+  const handleCreateFolder = useCallback(() => {
     if (newFolderName.trim()) {
       createFolder(newFolderName.trim());
       setNewFolderName('');
       setShowNewFolderModal(false);
     }
-  };
+  }, [newFolderName, createFolder]);
 
-  const handleCreateDocument = (folderId = null) => {
+  const handleCreateDocument = useCallback((folderId = null) => {
     setNewDocFolderId(folderId);
     setShowNewDocModal(true);
-  };
+  }, []);
 
-  const handleConfirmCreateDocument = async () => {
+  const handleConfirmCreateDocument = useCallback(async () => {
     if (newDocName.trim()) {
       await createDocument(newDocName.trim(), newDocFolderId);
       setNewDocName('');
       setNewDocFolderId(null);
       setShowNewDocModal(false);
     }
-  };
+  }, [newDocName, newDocFolderId, createDocument]);
 
-  const handleDeleteDocument = (id) => {
+  const handleDeleteDocument = useCallback((id) => {
     setConfirmDeleteId(id);
-  };
+  }, []);
 
-  const confirmDelete = async () => {
+  const confirmDelete = useCallback(async () => {
     if (confirmDeleteId) {
       await deleteDocument(confirmDeleteId);
       setConfirmDeleteId(null);
     }
-  };
+  }, [confirmDeleteId, deleteDocument]);
 
-  const cancelDelete = () => {
+  const cancelDelete = useCallback(() => {
     setConfirmDeleteId(null);
-  };
+  }, []);
 
-  const handleShareDocument = (doc, e) => {
+  const handleShareDocument = useCallback((doc, e) => {
     e.preventDefault();
     e.stopPropagation();
     setShareModalDoc(doc);
-  };
+  }, []);
 
   const getRoleIcon = (document) => {
     const role = getUserRole(document);
@@ -95,7 +97,7 @@ const DocumentList = ({ isOpen }) => {
     }
   };
 
-  const documentsWithoutFolder = documents.filter(doc => !doc.folderId);
+  const documentsWithoutFolder = useMemo(() => documents.filter(doc => !doc.folderId), [documents]);
 
 
   return (

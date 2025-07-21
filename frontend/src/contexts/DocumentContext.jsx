@@ -19,7 +19,7 @@ import { useAuth } from './AuthContext';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 
-const DocumentContext = createContext();
+export const DocumentContext = createContext();
 
 export const useDocuments = () => {
   const context = useContext(DocumentContext);
