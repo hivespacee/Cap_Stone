@@ -1,54 +1,90 @@
-Tech Stack
-Frontend
-•	React with JavaScript
-•	Tailwind CSS for styling
-•	BlockNote for text-based editing and collaboration
-Backend
-•	Node.js with Express.js
-•	socket.io for real-time collaboration
-•	JWT or Firebase for authentication and authorization
+Chotaa Notion - Project Documentation
 
-Database & Storage
-•	Firebase Firestore for document storage
-•	Firebase Authentication for user management
+Overview:
+Chotaa Notion is a collaborative document editing platform inspired by Notion. It allows users to create, edit, and share documents in real time, with a modern and user-friendly interface.
 
-System Design Overview
+Tech Stack:
+Frontend:
+- React (JSX, hooks) (Bun runtime)
+- Vite
+- Tailwind CSS
+- Lucide React (icons)
+- Firebase (auth, Firestore, storage)
+- Socket.IO (real-time)
+- BlockNote (rich text editor) +  Y-Sweet/Yjs (real-time sync)
 
-High-Level Architecture:
+Backend:
+- Node.js (Bun runtime)
+- Express
+- Socket.IO
+- Firebase Admin SDK
+- CORS, dotenv
 
+Features:
+- Email/password and Google login
+- Create, edit, delete, organize documents and folders
+- Real-time collaboration (multiple users editing)
+- Comments and sharing with permissions (viewer, editor, admin)
+- Rich text editor
+- Dashboard with recent documents and search
+- Responsive design, dark/light theme
+- Notifications and user profile management
 
-Flowchart
-    A[Client (React/Vite)] ----> B[Backend (Express/Bun)]
-    A -- Socket.IO (WebSocket) --> B
-    A -- (AuthContext/DocuContext) --> C[Firebase]
+System Design:
+- Frontend connects to backend via Socket.IO for real-time updates, manages authentication and file operations.
+- Backend manages stable socket connections.
+- Firebase stores users, documents, folders, and handles authentication.
 
-Low-Level Design
+UI/UX:
+- Clean, modern design with Tailwind CSS and Rubik font
+- Followed 60-30-10 color theory for color scheme
+- Sidebar navigation, dashboard, modals for actions
+- Shows active users and live cursors
+- Works on desktop and mobile
 
-   Document Model: Each document has title, content (BlockNote blocks), roles, members, comments, timestamps.
-   Folder Model: Folders are user-scoped, contain documents.
-   User Model: Profile info, avatar, permissions.
-   Socket.IO: Handles events like "joinDocument", "leaveDocument", "documentChange", "activeUsers", "cursorUpdate".
-   Y-Sweet/Yjs: Provides advanced CRDT-based real-time editing, awareness (cursors, presence).
+Performance:
+Client:
+- Virtual scrolling for large docs
+- Lazy loading for pages
+Server:
+- Connection pooling
+- Caching
+- Rate limiting
 
+Suggestions:
+- Offline editing
+- Document version history
+- Push/email notifications
+- Export/import options
+- Advanced permissions
+- AI features
+- Mobile app
 
+Getting Started:
+1. Install dependencies (
+    frontend: bun install, 
+    backend: bun install
+   )
+2. Set up .env files for Firebase and API URLs
+3. Run frontend (bun run dev) and
+       backend (bun run)
+4. Open the app in your browser
 
-End Goals
-•	 Users can create accounts and workspaces
-•	 Basic block editing works (text, headings, lists)
-•	 Real-time collaboration with 1+ users
-•	 Page creation and navigation
-
-Timeline & Priorities
-Day 1-2: Setup with Basic Features
-•	Project setup with React and Tiptap frontend
-•	Express.js backend with Firebase integration
-•	Basic authentication with JWT and Firebase
-Day 3-4: Project Core Features
-•	Document management system
-•	Real-time collaboration with WebRTC
-•	Basic editing and synchronization
-Day 5: Checking for bugs and edge cases
-•	Performance optimization
-•	Testing 
-•	Final Overview and Formatting codes
-
+Folder Structure:
+project/
+  frontend/
+    src/
+      components/
+      contexts/
+      pages/
+      config/
+      index.css
+      main.jsx
+    tailwind.config.js
+    index.html
+  backend/
+    server.js
+    package.json
+    README.md
+  docs/
+    FirstDocumentationCapstone

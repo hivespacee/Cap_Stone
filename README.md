@@ -6,81 +6,6 @@ Chotaa Notion is a modern, collaborative document editing platform inspired by N
 
 ---
 
-## Tech Stack
-
-**Frontend:**
-- React (JSX, hooks)
-- Vite (fast dev/build)
-- Tailwind CSS (utility-first styling)
-- Lucide React (icons)
-- Firebase (authentication, Firestore, storage)
-- Socket.IO (real-time collaboration)
-- BlockNote (rich text editor)
-- Y-Sweet/Yjs (advanced real-time document sync)
-
-**Backend:**
-- Node.js (Bun runtime)
-- Express (API server)
-- Socket.IO (WebSocket server)
-- Firebase Admin SDK (user management, Firestore access)
-- CORS, dotenv (config, security)
-
----
-
-## Features
-
-- **Authentication:** Email/password & Google login, password reset, secure user profiles.
-- **Document Management:** Create, edit, delete, organize documents in folders.
-- **Real-Time Collaboration:** Multiple users can edit the same document simultaneously, see live cursors and active users.
-- **Comments & Sharing:** Add comments, share documents with granular permissions (viewer, editor, admin).
-- **Rich Editor:** BlockNote-based editor with formatting, blocks, and collaborative cursors.
-- **Dashboard:** Recent documents, quick access, search, and folder navigation.
-- **Responsive UI:** Works beautifully on desktop and mobile.
-- **Dark/Light Theme:** Toggle between themes for optimal comfort.
-- **Notifications:** Toasts for feedback on actions.
-- **Profile Management:** User avatars, display names, and settings.
-
----
-
-## System Design
-
-### High-Level Architecture
-
-<img width="648" height="498" alt="image" src="https://github.com/user-attachments/assets/b5489035-5469-438d-b92f-d73e4b328c35" />
-
-
-### Low-Level Design
-
-- **Document Model:** Each document has title, content (BlockNote blocks), roles, members, comments, timestamps.
-- **Folder Model:** Folders are user-scoped, contain documents.
-- **User Model:** Profile info, avatar, permissions.
-- **Socket.IO:** Handles events like `joinDocument`, `leaveDocument`, `documentChange`, `activeUsers`, `cursorUpdate`.
-- **Y-Sweet/Yjs:** Provides advanced CRDT-based real-time editing, awareness (cursors, presence).
-
----
-
-## UI/UX Design
-
-- **Beautiful, Modern UI:** Custom-designed with Tailwind CSS, Rubik font, and Lucide icons for a unique, inviting look.
-- **Intuitive Navigation:** Sidebar for folders/documents, dashboard for quick access, modals for actions.
-- **Collaborative Indicators:** See who is active, live cursors, and comments.
-- **Accessibility:** Keyboard navigation, focus states, readable colors.
-- **Responsive:** Adapts to all screen sizes, touch-friendly controls.
-- **Animations:** Subtle transitions and feedback for a delightful experience.
-
----
-
-## Better Ideas & Suggestions
-
-- **Offline Support:** Consider adding local caching for offline editing.
-- **Version History:** Implement document versioning and rollback.
-- **Notifications:** Push/email notifications for document changes or comments.
-- **Integrations:** Add export/import (Markdown, PDF), calendar/task integration.
-- **Advanced Permissions:** Share folders, invite via link, granular access control.
-- **AI Features:** Smart suggestions, summarization, or grammar checking.
-- **Mobile App:** Build a React Native version for mobile-first users.
-
----
 
 ## Getting Started
 
@@ -97,28 +22,25 @@ Chotaa Notion is a modern, collaborative document editing platform inspired by N
 
 ---
 
-## Folder Structure
 
-```
-project/
-  frontend/
-    src/
-      components/
-      contexts/
-      pages/
-      config/
-      index.css
-      main.jsx
-    tailwind.config.js
-    index.html
-  backend/
-    server.js
-    package.json
-    README.md
-  README.md
-```
+
+## Features
+
+- **Authentication:** Email/password & Google login, password reset, secure user profiles.
+- **Document Management:** Create, edit, delete, organize documents in folders.
+- **Real-Time Collaboration:** Multiple users can edit the same document simultaneously, see live cursors and active users.
+- **Comments & Sharing:** Add comments, share documents with granular permissions (viewer, editor, admin).
+- **Rich Editor:** BlockNote-based editor with formatting, blocks, and collaborative cursors.
+- **Dashboard:** Recent documents, quick access, search, and folder navigation.
+- **Responsive UI:** Works beautifully on desktop and mobile.
+- **Dark/Light Theme:** Toggle between themes for optimal comfort.
+- **Notifications:** Toasts for feedback on actions.
+- **Profile Management:** User avatars, display names, and settings.
 
 ---
+
+
+
 
 ## Contributing
 
@@ -127,8 +49,3 @@ project/
 - Suggest UI/UX improvements or new features!
 
 ---
-
-
-## Credits
-
-- Inspired by Notion, built with love by Team Chotaa Notion.

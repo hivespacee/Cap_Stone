@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useDocuments } from '../contexts/DocumentContext';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { FileText, Search, Clock, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import img1 from '../images/noseyGreeting.gif';
 import img2 from '../images/noseySearching.gif';
 import img3 from '../images/noseyThinking.gif';
