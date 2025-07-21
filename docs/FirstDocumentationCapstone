@@ -1,0 +1,67 @@
+Tech Stack
+Frontend
+•	React with JavaScript
+•	Tailwind CSS for styling
+•	Tiptap for WYSIWYG or Slate.js rich text editing
+Backend
+•	Node.js with Express.js
+•	WebRTC’s for real-time collaboration
+•	JWT or Firebase for authentication and authorization
+•	Multer for file uploads
+Database & Storage
+•	Firebase Firestore for document storage
+•	Firebase Authentication for user management
+•	Firebase Storage for file uploads 
+
+System Design Overview
+
+High-Level Architecture:
+
+```mermaid
+flowchart LR
+    A[Client (React/Vite)] -- REST API --> B[Backend (Express/Bun)]
+    A -- Socket.IO (WebSocket) --> B
+    B -- Firestore/Storage/Auth --> C[Firebase]
+```
+
+
+Performance Considerations
+Client-side
+•	Virtual scrolling for large documents
+•	Dynamic updates for better UX
+•	Lazy loading for nested pages
+Server-side
+•	Connection pooling for database
+•	Caching memory for frequently used data
+•	Rate limiting 
+•	Database indexing for search
+Client-side
+•	Virtual scrolling for large documents
+•	Dynamic updates for better UX
+•	Lazy loading for nested pages
+Server-side
+•	Connection pooling for database
+•	Caching memory for continuous used data
+•	Rate limiting 
+•	Trying Indexes in Database Search
+
+End Goals
+•	 Users can create accounts and workspaces
+•	 Basic block editing works (text, headings, lists)
+•	 Real-time collaboration with 1+ users
+•	 Page creation and navigation
+
+Timeline & Priorities
+Day 1-2: Setup with Basic Features
+•	Project setup with React and Tiptap frontend
+•	Express.js backend with Firebase integration
+•	Basic authentication with JWT and Firebase
+Day 3-4: Project Core Features
+•	Document management system
+•	Real-time collaboration with WebRTC
+•	Basic editing and synchronization
+Day 5: Checking for bugs and edge cases
+•	Performance optimization
+•	Testing 
+•	Final Overview and Formatting codes
+
